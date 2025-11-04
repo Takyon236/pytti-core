@@ -98,19 +98,27 @@ def generate_image(
 
         img_model.encode_random()
 
-        # 3. Initialize CLIP embedder
+        # 3. Initialize CLIP perceptors first
         logger.info("Loading CLIP model...")
+        from pytti.Perceptor import init_clip
+
+        # Initialize CLIP with default model (ViT-B/32)
+        # TODO: Make this configurable based on config["clip_model"]
+        clip_models = ["ViT-B/32"]
+        init_clip(clip_models, device=shared_state.device)
+
+        # 4. Initialize CLIP embedder
         clip_embedder = HDMultiClipEmbedder(
             cutn=config["cutouts"],
             cut_pow=config["cut_pow"],
             device=shared_state.device,
         )
 
-        # 4. Parse prompt
+        # 5. Parse prompt
         logger.info(f"Parsing prompt: {config['prompt']}")
         prompt_obj = parse_prompt(clip_embedder, config["prompt"])
 
-        # 5. Optimize! (PyTTI's magic - iterative refinement)
+        # 6. Optimize! (PyTTI's magic - iterative refinement)
         logger.info(f"Starting iterative optimization ({config['steps_per_scene']} steps)...")
 
         learning_rate = config["learning_rate"]
@@ -166,11 +174,11 @@ def generate_image(
                 # Continue to next step
                 continue
 
-        # 6. Decode final image
+        # 7. Decode final image
         logger.info("Decoding final image...")
         result_image = img_model.decode_image()
 
-        # 7. Save final result
+        # 8. Save final result
         output_path = output_dir / f"{config['file_namespace']}_final.png"
         result_image.save(output_path)
         logger.info(f"Saved final result: {output_path}")
