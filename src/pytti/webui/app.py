@@ -26,6 +26,8 @@ from loguru import logger
 from pytti.model_loader import ModelRegistry, get_model_loader
 from pytti.webui.tabs.generate import create_generate_tab
 from pytti.webui.components.shared_state import SharedState
+from pytti.webui.components.vram_monitor import VRAMMonitor
+from pytti.webui.components.error_display import ErrorDisplay, StatusFormatter
 
 
 class PyTTIWebUI:
@@ -110,14 +112,55 @@ class PyTTIWebUI:
                 </div>
                 """)
 
-            # Info banner
+            # Info banner and system status
             with gr.Row():
-                gr.Markdown("""
-                **PyTTI** uses iterative CLIP-guided optimization to create unique, evolving visuals.
-                Unlike one-shot generation, PyTTI refines over 200+ steps for distinctive results.
+                with gr.Column(scale=3):
+                    gr.Markdown("""
+                    **PyTTI** uses iterative CLIP-guided optimization to create unique, evolving visuals.
+                    Unlike one-shot generation, PyTTI refines over 200+ steps for distinctive results.
 
-                🎯 **Quick Start:** Select a preset, enter your prompt, and click Generate!
-                """)
+                    🎯 **Quick Start:** Select a preset, enter your prompt, and click Generate!
+                    """)
+
+                with gr.Column(scale=1):
+                    # System status sidebar
+                    gr.Markdown("### 📊 System Status")
+
+                    # VRAM Monitor
+                    vram_display = gr.Textbox(
+                        label="GPU Memory",
+                        value=VRAMMonitor.format_vram_display(),
+                        interactive=False,
+                        lines=3,
+                        elem_id="vram_status"
+                    )
+
+                    with gr.Row():
+                        refresh_vram_btn = gr.Button("🔄 Refresh", size="sm", scale=1)
+                        clear_cache_btn = gr.Button("🧹 Clear Cache", size="sm", scale=1)
+
+                    # Wire up VRAM monitor buttons
+                    def refresh_vram():
+                        return VRAMMonitor.format_vram_display()
+
+                    def clear_vram_cache():
+                        try:
+                            if torch.cuda.is_available():
+                                torch.cuda.empty_cache()
+                                from pytti.managers import ClipManager
+                                try:
+                                    ClipManager.get_instance().cleanup()
+                                except Exception:
+                                    pass
+                                return VRAMMonitor.format_vram_display()
+                            else:
+                                return VRAMMonitor.format_vram_display()
+                        except Exception as e:
+                            logger.error(f"Cache clear error: {e}")
+                            return VRAMMonitor.format_vram_display()
+
+                    refresh_vram_btn.click(fn=refresh_vram, outputs=vram_display)
+                    clear_cache_btn.click(fn=clear_vram_cache, outputs=vram_display)
 
             # Main tabbed interface
             with gr.Tabs() as tabs:
