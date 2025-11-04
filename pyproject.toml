@@ -36,14 +36,16 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Artistic Software",
     "Topic :: Multimedia :: Video",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
 dependencies = [
-    "torch>=1.10",
+    "torch",
     "torchvision",
+    "torchaudio",
     "numpy",
     "pillow",
     "opencv-python",
@@ -53,6 +55,7 @@ dependencies = [
     "kornia",
     "lpips",
     "pytorch-lightning",
+    "torchmetrics",
     "scipy",
     "tqdm",
     "omegaconf",
@@ -60,32 +63,33 @@ dependencies = [
     "loguru",
     "attrs",
     "cattrs",
-    "gdown>=4.2.0",
-    "PyGLM>=2.5.7",
-    "ftfy>=6.0.3",
+    "gdown",
+    "PyGLM",
+    "ftfy",
     "regex",
+    "matplotlib",
     "adjustText",
-    "matplotlib-label-lines>=0.4.3",
-    "pandas>=1.3.4",
-    "seaborn>=0.11.2",
+    "matplotlib-label-lines",
+    "pandas",
+    "seaborn",
     "scikit-learn",
     "tensorboard",
 ]
 
 [project.optional-dependencies]
 modern = [
-    "diffusers>=0.31.0",
-    "transformers>=4.45.0",
-    "accelerate>=0.34.0",
-    "safetensors>=0.4.0",
-    "huggingface-hub>=0.25.0",
-    "timm>=0.9.0",
+    "diffusers",
+    "transformers",
+    "accelerate",
+    "safetensors",
+    "huggingface-hub",
+    "timm",
     "segment-anything-2",
 ]
 
 webui = [
-    "gradio>=4.44.0",
-    "plotly>=5.18.0",
+    "gradio",
+    "plotly",
 ]
 
 dev = [
@@ -129,7 +133,7 @@ pytti = [
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
