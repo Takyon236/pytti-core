@@ -17,17 +17,61 @@ Complete installation guide for PyTTI Modern (2025).
 
 ## 🚀 Quick Install (Recommended)
 
-### For Most Users (Web UI + Modern AI)
+### Method 1: Automated Install Script (Easiest!)
 
+**Linux/macOS:**
 ```bash
-# 1. Clone repository
-git clone https://github.com/pytti-tools/pytti-core
+# 1. Clone repository with submodules
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
-# 2. Install with all modern features
-pip install -e ".[all]"
+# 2. Run install script
+./install.sh all
 
 # 3. Launch Web UI
+pytti-webui
+```
+
+**Windows:**
+```powershell
+# 1. Clone repository with submodules
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+cd pytti-core
+
+# 2. Run install script
+install.bat all
+
+# 3. Launch Web UI
+pytti-webui
+```
+
+Opens browser at `http://localhost:7860` 🎉
+
+---
+
+### Method 2: Manual Install
+
+**⚠️ IMPORTANT:** PyTTI uses git submodules for legacy models (GMA, AdaBins, CLIP, VQGAN).
+You MUST clone with `--recurse-submodules` or initialize them manually!
+
+```bash
+# 1. Clone repository WITH SUBMODULES
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+cd pytti-core
+
+# If you already cloned without --recurse-submodules, run:
+# git submodule update --init --recursive
+
+# 2. Install vendor dependencies (legacy models)
+pip install ./vendor/AdaBins
+pip install ./vendor/CLIP
+pip install ./vendor/GMA
+pip install ./vendor/taming-transformers
+
+# 3. Install PyTTI with all modern features
+pip install -e ".[all]"
+
+# 4. Launch Web UI
 pytti-webui
 ```
 
@@ -281,6 +325,46 @@ Should start generating with SDXL.
 ---
 
 ## 🐛 Troubleshooting
+
+### "ModuleNotFoundError: No module named 'gma'" ⚠️ COMMON ISSUE
+
+**This is the #1 installation issue!**
+
+**Cause:** Git submodules weren't initialized. PyTTI needs vendor dependencies (GMA, AdaBins, CLIP, VQGAN).
+
+**Solution 1 - Use Install Script (Recommended):**
+```bash
+# If already cloned:
+cd pytti-core
+./install.sh all   # Linux/macOS
+# OR
+install.bat all    # Windows
+```
+
+**Solution 2 - Manual Fix:**
+```bash
+# Initialize submodules
+git submodule update --init --recursive
+
+# Install vendor dependencies
+pip install ./vendor/GMA
+pip install ./vendor/AdaBins
+pip install ./vendor/CLIP
+pip install ./vendor/taming-transformers
+
+# Reinstall PyTTI
+pip install -e ".[all]"
+```
+
+**Solution 3 - Fresh Install:**
+```bash
+# Clone with submodules from the start
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+cd pytti-core
+./install.sh all
+```
+
+---
 
 ### "No module named 'pytti'"
 

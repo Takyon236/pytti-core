@@ -21,18 +21,27 @@
 
 ### 🚀 Quick Start (Web UI - Recommended)
 
-```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-pip install -r requirements-modern.txt
-pip install -r requirements-webui.txt
+**⚠️ IMPORTANT:** Use `--recurse-submodules` when cloning!
 
-# 2. Launch browser interface
-python -m pytti.webui
+```bash
+# 1. Clone with submodules (IMPORTANT!)
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+cd pytti-core
+
+# 2. Run install script
+./install.sh all     # Linux/macOS
+# OR
+install.bat all      # Windows
+
+# 3. Launch browser interface
+pytti-webui
 
 # Opens at http://localhost:7860
 # Select preset, enter prompt, click Generate! 🎨
 ```
+
+**Already cloned without `--recurse-submodules`?**
+See [INSTALL.md](INSTALL.md) for fix instructions!
 
 ### 📖 Documentation
 
