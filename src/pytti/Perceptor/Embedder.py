@@ -49,7 +49,15 @@ class HDMultiClipEmbedder(nn.Module):
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.device = device
         if perceptors is None:
-            perceptors = pytti.Perceptor.CLIP_PERCEPTORS
+            # Use ClipManager to get perceptors
+            from pytti.managers import ClipManager
+            manager = ClipManager.get_instance()
+            if not manager.is_initialized():
+                raise RuntimeError(
+                    "CLIP not initialized. Call init_clip() or "
+                    "ClipManager.get_instance().initialize() first."
+                )
+            perceptors = manager.get_perceptors()
         self.cut_sizes = [p.visual.input_resolution for p in perceptors]
         self.cutn = cutn
         self.noise_fac = noise_fac
