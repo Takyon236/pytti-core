@@ -1,3 +1,154 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyttitools-core"
+version = "1.0.0"
+description = "PyTTI - AI-powered video generation with CLIP-guided iterative optimization"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "PyTTI Tools Community"}
+]
+maintainers = [
+    {name = "PyTTI Tools Community"}
+]
+keywords = [
+    "ai",
+    "video-generation",
+    "clip",
+    "stable-diffusion",
+    "depth-estimation",
+    "rotoscoping",
+    "3d-animation",
+    "artificial-intelligence",
+    "computer-vision"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Artistic Software",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "torch>=1.10",
+    "torchvision",
+    "numpy",
+    "pillow",
+    "opencv-python",
+    "imageio",
+    "imageio-ffmpeg",
+    "einops",
+    "kornia",
+    "lpips",
+    "pytorch-lightning",
+    "scipy",
+    "tqdm",
+    "omegaconf",
+    "hydra-core",
+    "loguru",
+    "attrs",
+    "cattrs",
+]
+
+[project.optional-dependencies]
+modern = [
+    "diffusers>=0.31.0",
+    "transformers>=4.45.0",
+    "accelerate>=0.34.0",
+    "safetensors>=0.4.0",
+    "huggingface-hub>=0.25.0",
+    "timm>=0.9.0",
+    "segment-anything-2",
+]
+
+webui = [
+    "gradio>=4.44.0",
+    "plotly>=5.18.0",
+]
+
+dev = [
+    "pytest",
+    "black",
+    "flake8",
+    "mypy",
+    "pre-commit",
+]
+
+all = [
+    "pyttitools-core[modern,webui,dev]",
+]
+
+[project.urls]
+Homepage = "https://github.com/pytti-tools/pytti-core"
+Documentation = "https://pytti-tools.github.io/pytti-book/intro.html"
+Repository = "https://github.com/pytti-tools/pytti-core"
+"Bug Tracker" = "https://github.com/pytti-tools/pytti-core/issues"
+
+[project.scripts]
+pytti-webui = "pytti.webui.app:main"
+pytti-validate = "pytti.validate_installation:main"
+pytti-migrate = "pytti.migrate_config:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pytti*", "hydra_plugins*"]
+exclude = ["tests*", "vendor*"]
+
+[tool.setuptools.package-data]
+pytti = [
+    "config/**/*.yaml",
+    "config/**/*.yml",
+    "assets/**/*",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | vendor
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v -s --ignore=vendor"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "vendor/",
+    "build/",
+]
