@@ -60,6 +60,15 @@ dependencies = [
     "loguru",
     "attrs",
     "cattrs",
+    "gdown>=4.2.0",
+    "PyGLM>=2.5.7",
+    "ftfy>=6.0.3",
+    "regex",
+    "adjustText",
+    "matplotlib-label-lines>=0.4.3",
+    "pandas>=1.3.4",
+    "seaborn>=0.11.2",
+    "scikit-learn",
 ]
 
 [project.optional-dependencies]
