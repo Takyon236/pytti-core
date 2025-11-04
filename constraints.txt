@@ -3,8 +3,12 @@
 # This file pins stable, tested versions of all dependencies.
 # Use with: pip install -c constraints.txt -e ".[all]"
 #
+# IMPORTANT: setup.cfg declares WHICH packages are needed (without versions).
+#            constraints.txt pins EXACT versions for stability.
+#            This separation allows flexible requirements with stable pinning.
+#
 # Last updated: 2025-11-04
-# Tested with Python 3.10, 3.11
+# Tested with Python 3.10, 3.11, 3.12
 
 # ============================================================================
 # Core Dependencies - Pinned to stable versions
@@ -103,6 +107,7 @@ matplotlib-label-lines==0.5.1
 
 # Data analysis
 pandas==2.1.4
+matplotlib==3.8.2
 seaborn==0.13.2
 scikit-learn==1.4.0
 
