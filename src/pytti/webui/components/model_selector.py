@@ -24,20 +24,20 @@ class ModelSelector:
     def get_diffusion_model_choices() -> List[str]:
         """Get list of available diffusion models"""
         models = ModelRegistry.list_models_by_type(ModelType.DIFFUSION)
-        return [model.name for model in models]
+        return [model.name for model in models.values()]
 
     @staticmethod
     def get_diffusion_model_info(model_name: str) -> Dict[str, Any]:
         """Get info about diffusion model"""
         models = ModelRegistry.list_models_by_type(ModelType.DIFFUSION)
-        for model in models:
+        for model in models.values():
             if model.name == model_name:
                 return {
-                    "id": model.id,
+                    "id": model.repo_id,
                     "name": model.name,
-                    "description": model.description,
-                    "recommended_size": model.metadata.get("recommended_size", "1024x1024"),
-                    "speed": model.metadata.get("speed", "medium"),
+                    "description": f"Model from {model.repo_id}",
+                    "recommended_size": "1024x1024",
+                    "speed": "medium",
                 }
         return {}
 
