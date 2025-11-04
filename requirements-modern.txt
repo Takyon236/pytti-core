@@ -1,0 +1,79 @@
+# PyTTI-Core Modern Dependencies
+# Python 3.10+ required
+
+# Core Deep Learning (Updated from 1.13.1 -> 2.5+)
+torch>=2.5.0
+torchvision>=0.20.0
+torchaudio>=2.5.0
+pytorch-lightning>=2.4.0
+
+# Modern AI/ML Libraries
+transformers>=4.45.0
+diffusers>=0.31.0  # NEW: Hugging Face diffusion models (ComfyUI-style)
+accelerate>=0.34.0  # NEW: Multi-GPU optimization
+safetensors>=0.4.0  # NEW: Safe model loading (ComfyUI uses this)
+sentencepiece>=0.2.0  # For modern tokenizers
+protobuf>=3.20.0
+
+# Computer Vision (Updated)
+opencv-python>=4.10.0
+kornia>=0.7.3
+einops>=0.8.0
+Pillow>=10.4.0
+imageio>=2.35.0
+imageio-ffmpeg>=0.5.0
+
+# CLIP & Vision-Language Models
+ftfy>=6.2.0
+regex>=2023.0.0
+open_clip_torch>=2.24.0  # NEW: OpenCLIP for modern variants
+
+# Depth Estimation (NEW - Modern alternatives to AdaBins)
+# We'll install depth models separately to avoid conflicts
+timm>=1.0.0  # Required by modern vision models
+
+# Optical Flow (Modern)
+# Will use torch-based implementations
+
+# 3D Graphics (Keep - PyTTI's unique feature)
+PyGLM>=2.7.0
+
+# Configuration & Utils (Keep - Hydra is still modern)
+omegaconf>=2.3.0
+hydra-core>=1.3.0
+loguru>=0.7.0
+
+# Scientific Computing
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.14.0
+scikit-learn>=1.5.0
+
+# Visualization
+matplotlib>=3.9.0
+seaborn>=0.13.0
+adjustText>=1.2.0
+matplotlib-label-lines>=0.7.0
+
+# Progress & Utils
+tqdm>=4.66.0
+exrex>=0.11.0
+
+# Jupyter (Optional)
+jupyter>=1.0.0
+
+# Development Tools (NEW)
+pytest>=8.0.0
+black>=24.0.0
+mypy>=1.11.0
+ruff>=0.6.0
+
+# Remove: TensorFlow (no longer needed)
+# Remove: Old versions of torch, pillow, etc.
+
+# Model Management (NEW - ComfyUI-style)
+huggingface-hub>=0.24.0
+pydantic>=2.8.0  # For type-safe configs
+
+# Segmentation & Tracking (NEW - for AI rotoscoping)
+# SAM 2 and CoTracker will be installed separately
