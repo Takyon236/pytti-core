@@ -1,0 +1,128 @@
+# PyTTI Dependency Constraints
+#
+# This file pins stable, tested versions of all dependencies.
+# Use with: pip install -c constraints.txt -e ".[all]"
+#
+# Last updated: 2025-11-04
+# Tested with Python 3.10, 3.11
+
+# ============================================================================
+# Core Dependencies - Pinned to stable versions
+# ============================================================================
+
+# NumPy - Pin to 1.26.4 (last stable 1.x, widely compatible)
+# This version works with both old and new libraries
+numpy==1.26.4
+
+# PyTorch - Modern stable version (2.1.x series)
+# Compatible with numpy 1.26.x and most CUDA versions
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# Core image processing
+Pillow==10.2.0
+opencv-python==4.9.0.80
+imageio==2.34.0
+imageio-ffmpeg==0.4.9
+
+# Scientific computing
+scipy==1.11.4
+
+# ============================================================================
+# AI/ML Libraries - Modern versions
+# ============================================================================
+
+# Modern diffusion models (SDXL, Flux)
+diffusers==0.31.0
+transformers==4.45.2
+accelerate==0.34.2
+safetensors==0.4.5
+huggingface-hub==0.25.2
+
+# Vision models
+timm==0.9.16
+segment-anything-2==1.0
+
+# PyTorch Lightning
+pytorch-lightning==2.1.4
+torchmetrics==1.3.1
+
+# Kornia (image augmentation)
+kornia==0.7.1
+
+# LPIPS (perceptual loss)
+lpips==0.1.4
+
+# Einops (tensor operations)
+einops==0.7.0
+
+# ============================================================================
+# Web UI Dependencies
+# ============================================================================
+
+gradio==4.44.1
+plotly==5.18.0
+
+# ============================================================================
+# Utility Libraries
+# ============================================================================
+
+# Configuration
+omegaconf==2.3.0
+hydra-core==1.3.2
+
+# Logging
+loguru==0.7.2
+tensorboard==2.15.2
+
+# Progress bars
+tqdm==4.66.1
+
+# Data structures
+attrs==23.2.0
+cattrs==23.2.3
+
+# ============================================================================
+# PyTTI-specific Dependencies
+# ============================================================================
+
+# Google Drive downloads
+gdown==4.7.3
+
+# OpenGL math
+PyGLM==2.7.1
+
+# Text processing
+ftfy==6.1.3
+regex==2023.12.25
+
+# Plotting
+adjustText==1.1.1
+matplotlib-label-lines==0.5.1
+
+# Data analysis
+pandas==2.1.4
+seaborn==0.13.2
+scikit-learn==1.4.0
+
+# ============================================================================
+# Version Notes
+# ============================================================================
+#
+# NumPy 1.26.4:
+#   - Last stable 1.x series
+#   - Compatible with PyTorch 2.x
+#   - Works with older libraries
+#   - No breaking API changes
+#
+# PyTorch 2.1.2:
+#   - Stable, widely deployed
+#   - Good CUDA support
+#   - Compatible with all our dependencies
+#
+# Avoiding:
+#   - NumPy 2.x (too new, breaks some libraries)
+#   - PyTorch 2.3+ (very recent, less tested)
+#   - Old versions (<2.0) that lack features
+#

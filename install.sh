@@ -69,17 +69,21 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 # Detect installation option
 if [ "$1" = "all" ]; then
     echo "Installing PyTTI with ALL features (modern + webui)..."
-    pip install -e ".[all]"
+    echo "Using version constraints for stable, tested dependencies..."
+    pip install -c constraints.txt -e ".[all]"
 elif [ "$1" = "modern" ]; then
     echo "Installing PyTTI with modern AI models..."
-    pip install -e ".[modern]"
+    echo "Using version constraints for stable, tested dependencies..."
+    pip install -c constraints.txt -e ".[modern]"
 elif [ "$1" = "webui" ]; then
     echo "Installing PyTTI with Web UI..."
-    pip install -e ".[webui]"
+    echo "Using version constraints for stable, tested dependencies..."
+    pip install -c constraints.txt -e ".[webui]"
 else
     echo "Installing PyTTI core only..."
     echo "(Use './install.sh all' for all features)"
-    pip install -e .
+    echo "Using version constraints for stable, tested dependencies..."
+    pip install -c constraints.txt -e .
 fi
 
 echo "✓ PyTTI installed"

@@ -69,13 +69,65 @@ pip install ./vendor/GMA
 pip install ./vendor/taming-transformers
 
 # 3. Install PyTTI with all modern features
-pip install -e ".[all]"
+pip install -c constraints.txt -e ".[all]"
 
 # 4. Launch Web UI
 pytti-webui
 ```
 
 Opens browser at `http://localhost:7860` 🎉
+
+---
+
+## 🔒 Dependency Version Management
+
+PyTTI uses a **constraints file** to ensure stable, tested dependencies and avoid version conflicts (especially NumPy 1.x vs 2.x).
+
+### Why Constraints?
+
+**Problem:** Without version constraints, you may encounter:
+- NumPy 2.x breaking changes (incompatible with many libraries)
+- PyTorch version mismatches
+- Diffusers/Transformers incompatibilities
+- Import errors and runtime crashes
+
+**Solution:** The `constraints.txt` file pins all dependencies to stable, tested versions.
+
+### Version Strategy
+
+We use **modern but stable** versions:
+
+| Package | Version | Reason |
+|---------|---------|--------|
+| NumPy | 1.26.4 | Last stable 1.x series, avoids 2.x breaking changes |
+| PyTorch | 2.1.2 | Modern, stable, widely deployed |
+| Diffusers | 0.31.0 | Latest stable with SDXL/Flux support |
+| Transformers | 4.45.2 | Compatible with modern models |
+| Gradio | 4.44.1 | Latest stable Web UI framework |
+
+**We avoid:**
+- NumPy 2.x (too new, breaks many libraries)
+- PyTorch 2.3+ (very recent, less tested)
+- Bleeding-edge versions (unstable)
+
+### How It Works
+
+The install scripts automatically use constraints:
+
+```bash
+# Automatically applied by install.sh / install.bat
+pip install -c constraints.txt -e ".[all]"
+```
+
+**Manual install:** If installing manually, always use the `-c constraints.txt` flag:
+
+```bash
+# ✅ Correct - uses constraints
+pip install -c constraints.txt -e ".[all]"
+
+# ❌ Wrong - may cause version conflicts
+pip install -e ".[all]"
+```
 
 ---
 
@@ -88,7 +140,7 @@ PyTTI offers multiple installation options via extras:
 Install everything - core, modern AI models, and Web UI:
 
 ```bash
-pip install -e ".[all]"
+pip install -c constraints.txt -e ".[all]"
 ```
 
 **Includes:**
@@ -104,7 +156,7 @@ pip install -e ".[all]"
 Install core PyTTI with modern models (no Web UI):
 
 ```bash
-pip install -e ".[modern]"
+pip install -c constraints.txt -e ".[modern]"
 ```
 
 **Includes:**
@@ -120,7 +172,7 @@ pip install -e ".[modern]"
 Install core PyTTI with Web UI (legacy models):
 
 ```bash
-pip install -e ".[webui]"
+pip install -c constraints.txt -e ".[webui]"
 ```
 
 **Includes:**
@@ -135,7 +187,7 @@ pip install -e ".[webui]"
 Install just core PyTTI with legacy models:
 
 ```bash
-pip install -e .
+pip install -c constraints.txt -e .
 ```
 
 **Includes:**
@@ -153,16 +205,16 @@ Mix and match features:
 
 ```bash
 # Core + Modern AI only
-pip install -e ".[modern]"
+pip install -c constraints.txt -e ".[modern]"
 
 # Core + Web UI only
-pip install -e ".[webui]"
+pip install -c constraints.txt -e ".[webui]"
 
 # Core + Modern + Web UI (recommended)
-pip install -e ".[modern,webui]"
+pip install -c constraints.txt -e ".[modern,webui]"
 
 # Development setup
-pip install -e ".[modern,webui,dev]"
+pip install -c constraints.txt -e ".[modern,webui,dev]"
 ```
 
 ---
@@ -196,9 +248,9 @@ python3 -m venv pytti-env
 source pytti-env/bin/activate
 
 # Clone and install
-git clone https://github.com/pytti-tools/pytti-core
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
-pip install -e ".[all]"
+./install.sh all
 
 # Launch
 pytti-webui
@@ -228,9 +280,9 @@ python3 -m venv pytti-env
 source pytti-env/bin/activate
 
 # Clone and install
-git clone https://github.com/pytti-tools/pytti-core
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
-pip install -e ".[all]"
+./install.sh all
 
 # Launch
 pytti-webui
@@ -264,9 +316,9 @@ python -m venv pytti-env
 pytti-env\Scripts\activate
 
 # Clone and install
-git clone https://github.com/pytti-tools/pytti-core
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
-pip install -e ".[all]"
+./install.sh all
 
 # Launch
 pytti-webui
@@ -326,6 +378,47 @@ Should start generating with SDXL.
 
 ## 🐛 Troubleshooting
 
+### "NumPy version conflicts" or "cannot import from numpy" ⚠️ NEW COMMON ISSUE
+
+**This is a critical issue affecting many users!**
+
+**Cause:** NumPy 2.x introduces breaking changes incompatible with many PyTorch libraries. Without version constraints, pip may install NumPy 2.x, breaking PyTTI.
+
+**Symptoms:**
+```
+AttributeError: module 'numpy' has no attribute 'float'
+ImportError: cannot import name 'X' from 'numpy'
+TypeError: 'type' object is not subscriptable (numpy.ndarray)
+```
+
+**Solution 1 - Use Install Script (Recommended):**
+```bash
+# The install script automatically uses constraints
+./install.sh all   # Linux/macOS
+# OR
+install.bat all    # Windows
+```
+
+**Solution 2 - Manual Fix:**
+```bash
+# Uninstall conflicting numpy
+pip uninstall numpy -y
+
+# Reinstall with constraints
+pip install -c constraints.txt -e ".[all]"
+```
+
+**Solution 3 - Check Your NumPy Version:**
+```bash
+python -c "import numpy; print(numpy.__version__)"
+```
+
+Should output: `1.26.4` (not 2.x.x)
+
+**Prevention:** Always use `-c constraints.txt` when installing PyTTI manually!
+
+---
+
 ### "ModuleNotFoundError: No module named 'gma'" ⚠️ COMMON ISSUE
 
 **This is the #1 installation issue!**
@@ -353,7 +446,7 @@ pip install ./vendor/CLIP
 pip install ./vendor/taming-transformers
 
 # Reinstall PyTTI
-pip install -e ".[all]"
+pip install -c constraints.txt -e ".[all]"
 ```
 
 **Solution 3 - Fresh Install:**
@@ -370,7 +463,7 @@ cd pytti-core
 
 **Solution:** Install in editable mode
 ```bash
-pip install -e .
+pip install -c constraints.txt -e .
 ```
 
 ### "CUDA not available"
@@ -416,14 +509,14 @@ python -c "import torch; print(torch.cuda.is_available())"
 
 **Solution:** Install modern extras
 ```bash
-pip install -e ".[modern]"
+pip install -c constraints.txt -e ".[modern]"
 ```
 
 ### "Gradio not found"
 
 **Solution:** Install Web UI extras
 ```bash
-pip install -e ".[webui]"
+pip install -c constraints.txt -e ".[webui]"
 ```
 
 ### Slow Generation on Mac
@@ -465,7 +558,7 @@ git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
 # Install in editable mode with dev tools
-pip install -e ".[all,dev]"
+pip install -c constraints.txt -e ".[all,dev]"
 
 # Install pre-commit hooks
 pre-commit install
@@ -545,9 +638,9 @@ After installation:
 
 **Recommended for most users:**
 ```bash
-git clone https://github.com/pytti-tools/pytti-core
+git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
-pip install -e ".[all]"
+./install.sh all  # or install.bat all on Windows
 pytti-webui
 ```
 
