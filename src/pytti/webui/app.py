@@ -123,11 +123,11 @@ class PyTTIWebUI:
             with gr.Tabs() as tabs:
 
                 # Tab 1: Text-to-Image/Video Generation
-                with gr.Tab("🖼️ Generate", id="generate"):
+                with gr.Tab("🖼️ Generate", elem_id="generate"):
                     generate_interface = create_generate_tab(self.shared_state)
 
                 # Tab 2: 3D Animation (Coming Soon)
-                with gr.Tab("🎬 3D Animation", id="animation_3d"):
+                with gr.Tab("🎬 3D Animation", elem_id="animation_3d"):
                     gr.Markdown("""
                     ## 3D Animation Controls
 
@@ -142,7 +142,7 @@ class PyTTIWebUI:
                     """)
 
                 # Tab 3: AI Rotoscoping (Coming Soon)
-                with gr.Tab("🎭 AI Rotoscoping", id="rotoscope"):
+                with gr.Tab("🎭 AI Rotoscoping", elem_id="rotoscope"):
                     gr.Markdown("""
                     ## AI-Powered Video Segmentation
 
@@ -158,7 +158,7 @@ class PyTTIWebUI:
                     """)
 
                 # Tab 4: Gallery (Coming Soon)
-                with gr.Tab("🖼️ Gallery", id="gallery"):
+                with gr.Tab("🖼️ Gallery", elem_id="gallery"):
                     gr.Markdown("""
                     ## Generation Gallery
 
