@@ -1,0 +1,56 @@
+# PyTTI Modern - Flux Schnell Preset
+# Cutting-edge quality with fast generation
+
+# Image Generation
+image_model: "Flux Schnell"
+diffusion_model_id: "flux_schnell"
+
+# Image dimensions
+width: 1024
+height: 1024
+
+# Modern depth
+depth_model: "depth_anything_v2"
+depth_model_size: "base"
+
+# Animation
+animation_mode: "off"
+
+# PyTTI optimization (Flux needs lower LR)
+steps_per_scene: 150  # Flux is faster, fewer steps needed
+steps_per_frame: 40
+learning_rate: 0.05  # Lower for Flux
+
+# CLIP guidance
+cutouts: 40
+cut_pow: 2
+cutout_border: 0.25
+border_mode: "clamp"
+
+# Modern CLIP
+use_modern_clip: true
+clip_model: "siglip"
+
+# Prompts
+scenes: ""
+scene_prefix: ""
+scene_suffix: ""
+
+# Output
+file_namespace: "flux_output"
+save_every: 40
+display_every: 40
+frames_per_second: 12
+allow_overwrite: false
+
+# Performance
+use_fp16: true
+enable_xformers: true
+compile_models: false
+
+# VRAM
+approximate_vram_usage: false
+gradient_accumulation_steps: 1
+
+device: null
+models_parent_dir: "${oc.env:HOME}/.cache/pytti"

@@ -1,0 +1,72 @@
+# PyTTI Modern - AI-Powered Rotoscoping
+# Automatic video segmentation with SAM 2
+
+# Image Generation
+image_model: "Stable Diffusion XL"
+diffusion_model_id: "sdxl"
+
+# Image dimensions
+width: 1024
+height: 1024
+
+# Modern depth
+depth_model: "depth_anything_v2"
+depth_model_size: "base"
+
+# Video Source mode for rotoscoping
+animation_mode: "Video Source"
+
+# AI Segmentation
+use_ai_rotoscoping: true
+segmentation_model: "sam2_base"
+
+# Video settings
+video_path: ""  # Must be provided via CLI
+frame_stride: 1
+reencode_each_frame: false  # Let optical flow handle it
+flow_long_term_samples: 2
+
+# Border handling for video
+infill_mode: "smear"
+sampling_mode: "bicubic"
+
+# PyTTI optimization
+steps_per_scene: 200
+steps_per_frame: 50
+learning_rate: 0.1
+pre_animation_steps: 100
+
+# CLIP guidance
+cutouts: 40
+cut_pow: 2
+cutout_border: 0.25
+border_mode: "clamp"
+
+# Modern CLIP
+use_modern_clip: true
+clip_model: "siglip"
+
+# Prompts
+scenes: ""
+scene_prefix: ""
+scene_suffix: ""
+
+# Stabilization for video coherence
+flow_stabilization_weight: "0.5"
+depth_stabilization_weight: "0.2"
+semantic_stabilization_weight: ""
+
+# Output
+file_namespace: "rotoscope_output"
+save_every: 1  # Save every frame
+display_every: 10
+frames_per_second: 12
+allow_overwrite: false
+
+# Performance
+use_fp16: true
+enable_xformers: true
+compile_models: false
+
+device: null
+models_parent_dir: "${oc.env:HOME}/.cache/pytti"

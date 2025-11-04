@@ -1,0 +1,59 @@
+# PyTTI Modern - Stable Diffusion XL Preset
+# Excellent quality, balanced speed, recommended for most users
+
+# Image Generation
+image_model: "Stable Diffusion XL"
+diffusion_model_id: "sdxl"
+
+# Image dimensions (SDXL works well at 1024x1024)
+width: 1024
+height: 1024
+
+# Modern depth estimation
+depth_model: "depth_anything_v2"
+depth_model_size: "base"
+
+# Animation mode (off, 2D, 3D, Video Source)
+animation_mode: "off"
+
+# PyTTI's iterative optimization (this is the magic!)
+steps_per_scene: 200  # More steps = more refinement
+steps_per_frame: 50
+learning_rate: 0.1
+
+# CLIP guidance (PyTTI's signature)
+cutouts: 40
+cut_pow: 2
+cutout_border: 0.25
+border_mode: "clamp"
+
+# Modern CLIP
+use_modern_clip: true
+clip_model: "siglip"
+
+# Prompts (override via CLI)
+scenes: ""
+scene_prefix: ""
+scene_suffix: ""
+
+# Output settings
+file_namespace: "sdxl_output"
+save_every: 50
+display_every: 50
+frames_per_second: 12
+allow_overwrite: false
+
+# Performance optimizations
+use_fp16: true
+enable_xformers: true
+compile_models: false  # Set true for PyTorch 2.0+ speedup
+
+# VRAM management
+approximate_vram_usage: false
+gradient_accumulation_steps: 1
+
+# Device (auto-detected)
+device: null
+
+# Model storage
+models_parent_dir: "${oc.env:HOME}/.cache/pytti"

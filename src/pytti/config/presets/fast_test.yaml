@@ -1,0 +1,52 @@
+# PyTTI Modern - Fast Testing Preset
+# Quick iterations for testing prompts and settings
+
+# Image Generation (fast turbo model)
+image_model: "SDXL Turbo"
+diffusion_model_id: "sdxl_turbo"
+
+# Smaller dimensions for speed
+width: 512
+height: 512
+
+# Fast depth model
+depth_model: "depth_anything_v2"
+depth_model_size: "small"
+
+# Animation
+animation_mode: "off"
+
+# Minimal steps for quick testing
+steps_per_scene: 50  # Much fewer steps
+steps_per_frame: 20
+learning_rate: 0.15
+
+# Fewer cutouts for speed
+cutouts: 20
+cut_pow: 2
+cutout_border: 0.25
+border_mode: "clamp"
+
+# Modern CLIP
+use_modern_clip: true
+clip_model: "siglip"
+
+# Prompts
+scenes: ""
+scene_prefix: ""
+scene_suffix: ""
+
+# Output
+file_namespace: "test_output"
+save_every: 10
+display_every: 10
+frames_per_second: 12
+allow_overwrite: true  # OK to overwrite for testing
+
+# Performance
+use_fp16: true
+enable_xformers: true
+compile_models: false
+
+device: null
+models_parent_dir: "${oc.env:HOME}/.cache/pytti"

@@ -1,0 +1,73 @@
+# PyTTI Modern - High Quality 3D Animation
+# Best depth estimation and 3D effects
+
+# Image Generation
+image_model: "Stable Diffusion XL"
+diffusion_model_id: "sdxl"
+
+# Image dimensions
+width: 1024
+height: 1024
+
+# Best depth model for quality
+depth_model: "depth_anything_v2"
+depth_model_size: "large"  # Use large for best quality
+
+# 3D Animation mode
+animation_mode: "3D"
+
+# 3D Camera settings
+field_of_view: 60
+near_plane: 1
+far_plane: 10000
+
+# Camera movement (parametric - adapts to scene depth!)
+translate_x: "0"
+translate_y: "0"
+translate_z_3d: "t * 5"  # Move forward through scene
+rotate_3d: "[1, 0, 0, 0]"  # No rotation
+
+# Border handling for 3D
+infill_mode: "wrap"
+sampling_mode: "bicubic"
+lock_camera: false
+
+# PyTTI optimization (high quality = more steps)
+steps_per_scene: 300
+steps_per_frame: 100
+learning_rate: 0.1
+
+# CLIP guidance
+cutouts: 60  # More cutouts for better guidance
+cut_pow: 2
+cutout_border: 0.25
+border_mode: "clamp"
+
+# Modern CLIP
+use_modern_clip: true
+clip_model: "siglip"
+
+# Prompts
+scenes: ""
+scene_prefix: ""
+scene_suffix: ""
+
+# Stabilization for smooth 3D
+depth_stabilization_weight: "0.3"
+flow_stabilization_weight: ""
+direct_stabilization_weight: ""
+
+# Output
+file_namespace: "3d_output"
+save_every: 1  # Save every frame for 3D
+display_every: 10
+frames_per_second: 12
+allow_overwrite: false
+
+# Performance
+use_fp16: true
+enable_xformers: true
+compile_models: false
+
+device: null
+models_parent_dir: "${oc.env:HOME}/.cache/pytti"
