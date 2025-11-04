@@ -15,12 +15,70 @@ Complete installation guide for PyTTI Modern (2025).
 
 ---
 
+## ⚠️ Prerequisites: Install PyTorch First
+
+**IMPORTANT:** PyTTI requires PyTorch, but PyTorch installation depends on your CUDA version. Install PyTorch **before** installing PyTTI.
+
+### Find Your CUDA Version
+
+**Linux/Windows:**
+```bash
+nvidia-smi
+```
+Look for "CUDA Version" in the output.
+
+**macOS (M1/M2/M3):**
+No CUDA needed - PyTorch will use MPS (Metal Performance Shaders)
+
+### Install PyTorch
+
+Visit the official PyTorch installation tool: https://pytorch.org/get-started/locally/
+
+**Common configurations:**
+
+**CUDA 12.1 (Most Recent):**
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+
+**CUDA 11.8:**
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+**CPU Only (No GPU):**
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+**macOS (M1/M2/M3):**
+```bash
+pip install torch torchvision torchaudio
+```
+
+### Verify PyTorch Installation
+
+```bash
+python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}')"
+```
+
+**Expected output (GPU):**
+```
+PyTorch: 2.1.0+cu121
+CUDA available: True
+```
+
+---
+
 ## 🚀 Quick Install (Recommended)
 
 ### Method 1: Automated Install Script (Easiest!)
 
 **Linux/macOS:**
 ```bash
+# 0. Install PyTorch first (see Prerequisites section above)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 # 1. Clone repository with submodules
 git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
@@ -34,6 +92,9 @@ pytti-webui
 
 **Windows:**
 ```powershell
+# 0. Install PyTorch first (see Prerequisites section above)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 # 1. Clone repository with submodules
 git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
@@ -55,6 +116,9 @@ Opens browser at `http://localhost:7860` 🎉
 You MUST clone with `--recurse-submodules` or initialize them manually!
 
 ```bash
+# 0. Install PyTorch first (see Prerequisites section above)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 # 1. Clone repository WITH SUBMODULES
 git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
 cd pytti-core
@@ -100,14 +164,18 @@ We use **modern but stable** versions:
 | Package | Version | Reason |
 |---------|---------|--------|
 | NumPy | 1.26.4 | Last stable 1.x series, avoids 2.x breaking changes |
-| PyTorch | 2.1.2 | Modern, stable, widely deployed |
+| PyTorch | **Not constrained** | Install separately for your CUDA version |
 | Diffusers | 0.31.0 | Latest stable with SDXL/Flux support |
 | Transformers | 4.45.2 | Compatible with modern models |
 | Gradio | 4.44.1 | Latest stable Web UI framework |
 
+**PyTorch is NOT constrained** because:
+- Different users have different CUDA versions
+- PyTorch must match your system's CUDA installation
+- Install PyTorch first, then PyTTI (see Prerequisites section)
+
 **We avoid:**
 - NumPy 2.x (too new, breaks many libraries)
-- PyTorch 2.3+ (very recent, less tested)
 - Bleeding-edge versions (unstable)
 
 ### How It Works

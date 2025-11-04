@@ -3,9 +3,12 @@
 # This file pins stable, tested versions of all dependencies.
 # Use with: pip install -c constraints.txt -e ".[all]"
 #
-# IMPORTANT: setup.cfg declares WHICH packages are needed (without versions).
-#            constraints.txt pins EXACT versions for stability.
-#            This separation allows flexible requirements with stable pinning.
+# IMPORTANT:
+#   - setup.cfg/pyproject.toml declare WHICH packages are needed (without versions)
+#   - constraints.txt pins EXACT versions for stability
+#   - PyTorch (torch/torchvision/torchaudio) is NOT constrained here
+#     Users should install PyTorch separately based on their CUDA version
+#     See: https://pytorch.org/get-started/locally/
 #
 # Last updated: 2025-11-04
 # Tested with Python 3.10, 3.11, 3.12
@@ -18,11 +21,10 @@
 # This version works with both old and new libraries
 numpy==1.26.4
 
-# PyTorch - Modern stable version (2.1.x series)
-# Compatible with numpy 1.26.x and most CUDA versions
-torch==2.1.2
-torchvision==0.16.2
-torchaudio==2.1.2
+# NOTE: PyTorch (torch, torchvision, torchaudio) is NOT constrained
+# Install PyTorch separately for your CUDA version:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# or visit: https://pytorch.org/get-started/locally/
 
 # Core image processing
 Pillow==10.2.0
@@ -46,7 +48,6 @@ huggingface-hub==0.25.2
 
 # Vision models
 timm==0.9.16
-segment-anything-2==1.0
 
 # PyTorch Lightning
 pytorch-lightning==2.1.4
@@ -121,13 +122,13 @@ scikit-learn==1.4.0
 #   - Works with older libraries
 #   - No breaking API changes
 #
-# PyTorch 2.1.2:
-#   - Stable, widely deployed
-#   - Good CUDA support
-#   - Compatible with all our dependencies
+# PyTorch:
+#   - NOT constrained in this file
+#   - Install separately based on your CUDA version
+#   - Recommended: PyTorch 2.0+ for modern features
+#   - See: https://pytorch.org/get-started/locally/
 #
 # Avoiding:
 #   - NumPy 2.x (too new, breaks some libraries)
-#   - PyTorch 2.3+ (very recent, less tested)
-#   - Old versions (<2.0) that lack features
+#   - Very old PyTorch (<2.0) that lack modern features
 #

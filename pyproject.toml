@@ -84,7 +84,6 @@ modern = [
     "safetensors",
     "huggingface-hub",
     "timm",
-    "segment-anything-2",
 ]
 
 webui = [

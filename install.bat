@@ -5,6 +5,12 @@ echo ================================================================
 echo            PyTTI Modern - Installation Script
 echo ================================================================
 echo.
+echo IMPORTANT: Install PyTorch first for your CUDA version!
+echo Visit: https://pytorch.org/get-started/locally/
+echo.
+echo Example for CUDA 12.1:
+echo   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+echo.
 
 REM Check if we're in a git repository
 if not exist ".git" (
