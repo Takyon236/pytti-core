@@ -62,7 +62,6 @@ class StableDiffusionImage(EMAImage):
         """
         if device is None:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.device = device
 
         width *= scale
         height *= scale
@@ -75,25 +74,41 @@ class StableDiffusionImage(EMAImage):
         with vram_usage_mode(f"SD Image ({model_id})"):
             # Load diffusion pipeline
             loader = get_model_loader(device=device)
-            self.pipe = loader.load_diffusion_model(model_id, variant=variant)
+            pipe = loader.load_diffusion_model(model_id, variant=variant)
 
             # Get VAE for encoding/decoding
-            self.vae = self.pipe.vae
-            self.vae.eval()
-            self.vae.requires_grad_(False)
+            vae = pipe.vae
+            vae.eval()
+            vae.requires_grad_(False)
 
             # Calculate latent dimensions
             # SD uses 8x downsampling for latents
-            self.vae_scale_factor = 2 ** (len(self.vae.config.block_out_channels) - 1)
-            latent_width = width // self.vae_scale_factor
-            latent_height = height // self.vae_scale_factor
-            latent_channels = self.vae.config.latent_channels
+            vae_scale_factor = 2 ** (len(vae.config.block_out_channels) - 1)
+            latent_width = width // vae_scale_factor
+            latent_height = height // vae_scale_factor
+            latent_channels = vae.config.latent_channels
 
             # Initialize random latent
-            z = self._rand_latent(latent_channels, latent_height, latent_width)
+            # SD latents have roughly N(0, 1) distribution after VAE encoding
+            latent = torch.randn(
+                1,
+                latent_channels,
+                latent_height,
+                latent_width,
+                device=device,
+                dtype=torch.float32,
+            )
+            # Scale appropriately for SD's latent space
+            latent = latent * vae.config.scaling_factor
 
-            # Initialize EMA image
-            super().__init__(width, height, z, ema_val)
+            # Initialize EMA image FIRST (before setting module attributes)
+            super().__init__(width, height, latent, ema_val)
+
+            # NOW we can set module attributes after super().__init__()
+            self.device = device
+            self.pipe = pipe
+            self.vae = vae
+            self.vae_scale_factor = vae_scale_factor
 
             self.output_axes = ("n", "c", "h", "w")
             self.latent_strength = 1.0  # For latent loss (PyTTI feature)
