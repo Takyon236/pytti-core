@@ -298,7 +298,8 @@ def create_generate_tab(shared_state: SharedState) -> Dict[str, Any]:
     def on_preset_change(preset_name):
         """Load preset values"""
         if preset_name == "Custom":
-            return {}
+            # Don't update any values for Custom preset
+            return [gr.update()] * 8
 
         values = load_preset_values(preset_name)
         return [
