@@ -4,6 +4,8 @@ Custom exceptions for PyTTI.
 Provides user-friendly error messages and better error categorization.
 """
 
+from typing import Any
+
 
 class PyTTIException(Exception):
     """Base exception for all PyTTI errors."""
