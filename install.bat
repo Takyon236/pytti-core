@@ -1,5 +1,6 @@
 @echo off
-REM PyTTI Installation Script for Windows
+REM PyTTI Modern Installation Script for Windows
+REM No legacy dependencies required - uses modern AI models only
 
 echo ================================================================
 echo            PyTTI Modern - Installation Script
@@ -19,57 +20,7 @@ if not exist ".git" (
     exit /b 1
 )
 
-echo Step 1: Initializing git submodules...
-echo ----------------------------------------------------------------
-git submodule update --init --recursive
-if errorlevel 1 (
-    echo Failed to initialize submodules
-    exit /b 1
-)
-echo Submodules initialized
-echo.
-
-echo Step 2: Installing vendor dependencies...
-echo ----------------------------------------------------------------
-
-REM Install AdaBins
-if exist "vendor\AdaBins" (
-    echo Installing AdaBins...
-    pip install .\vendor\AdaBins
-    echo AdaBins installed
-) else (
-    echo AdaBins directory not found, skipping...
-)
-
-REM Install CLIP
-if exist "vendor\CLIP" (
-    echo Installing CLIP...
-    pip install .\vendor\CLIP
-    echo CLIP installed
-) else (
-    echo CLIP directory not found, skipping...
-)
-
-REM Install GMA
-if exist "vendor\GMA" (
-    echo Installing GMA...
-    pip install .\vendor\GMA
-    echo GMA installed
-) else (
-    echo GMA directory not found, skipping...
-)
-
-REM Install taming-transformers
-if exist "vendor\taming-transformers" (
-    echo Installing taming-transformers...
-    pip install .\vendor\taming-transformers
-    echo taming-transformers installed
-) else (
-    echo taming-transformers directory not found, skipping...
-)
-
-echo.
-echo Step 3: Installing PyTTI core...
+echo Installing PyTTI Modern...
 echo ----------------------------------------------------------------
 
 REM Detect installation option
@@ -95,7 +46,7 @@ if "%1"=="all" (
 echo PyTTI installed
 echo.
 
-echo Step 4: Validating installation...
+echo Validating installation...
 echo ----------------------------------------------------------------
 where pytti-validate >nul 2>&1
 if errorlevel 1 (

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# PyTTI Installation Script
-# Handles git submodules and vendor dependencies
+# PyTTI Modern Installation Script
+# No legacy dependencies required - uses modern AI models only
 
 set -e  # Exit on error
 
@@ -23,53 +23,7 @@ if [ ! -d ".git" ]; then
     exit 1
 fi
 
-echo "📦 Step 1: Initializing git submodules..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-git submodule update --init --recursive
-echo "✓ Submodules initialized"
-echo ""
-
-echo "🔧 Step 2: Installing vendor dependencies..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-# Install AdaBins
-if [ -d "vendor/AdaBins" ]; then
-    echo "Installing AdaBins..."
-    pip install ./vendor/AdaBins
-    echo "✓ AdaBins installed"
-else
-    echo "⚠️  AdaBins directory not found, skipping..."
-fi
-
-# Install CLIP
-if [ -d "vendor/CLIP" ]; then
-    echo "Installing CLIP..."
-    pip install ./vendor/CLIP
-    echo "✓ CLIP installed"
-else
-    echo "⚠️  CLIP directory not found, skipping..."
-fi
-
-# Install GMA
-if [ -d "vendor/GMA" ]; then
-    echo "Installing GMA..."
-    pip install ./vendor/GMA
-    echo "✓ GMA installed"
-else
-    echo "⚠️  GMA directory not found, skipping..."
-fi
-
-# Install taming-transformers
-if [ -d "vendor/taming-transformers" ]; then
-    echo "Installing taming-transformers..."
-    pip install ./vendor/taming-transformers
-    echo "✓ taming-transformers installed"
-else
-    echo "⚠️  taming-transformers directory not found, skipping..."
-fi
-
-echo ""
-echo "📦 Step 3: Installing PyTTI core..."
+echo "📦 Installing PyTTI Modern..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Detect installation option
@@ -95,7 +49,7 @@ fi
 echo "✓ PyTTI installed"
 echo ""
 
-echo "🔍 Step 4: Validating installation..."
+echo "🔍 Validating installation..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if command -v pytti-validate &> /dev/null; then
     pytti-validate

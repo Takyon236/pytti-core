@@ -79,8 +79,8 @@ CUDA available: True
 # 0. Install PyTorch first (see Prerequisites section above)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# 1. Clone repository with submodules
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+# 1. Clone repository
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
 # 2. Run install script
@@ -95,8 +95,8 @@ pytti-webui
 # 0. Install PyTorch first (see Prerequisites section above)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# 1. Clone repository with submodules
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+# 1. Clone repository
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
 # 2. Run install script
@@ -112,30 +112,18 @@ Opens browser at `http://localhost:7860` 🎉
 
 ### Method 2: Manual Install
 
-**⚠️ IMPORTANT:** PyTTI uses git submodules for legacy models (GMA, AdaBins, CLIP, VQGAN).
-You MUST clone with `--recurse-submodules` or initialize them manually!
-
 ```bash
 # 0. Install PyTorch first (see Prerequisites section above)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# 1. Clone repository WITH SUBMODULES
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+# 1. Clone repository
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
-# If you already cloned without --recurse-submodules, run:
-# git submodule update --init --recursive
-
-# 2. Install vendor dependencies (legacy models)
-pip install ./vendor/AdaBins
-pip install ./vendor/CLIP
-pip install ./vendor/GMA
-pip install ./vendor/taming-transformers
-
-# 3. Install PyTTI with all modern features
+# 2. Install PyTTI with all modern features
 pip install -c constraints.txt -e ".[all]"
 
-# 4. Launch Web UI
+# 3. Launch Web UI
 pytti-webui
 ```
 
@@ -316,7 +304,7 @@ python3 -m venv pytti-env
 source pytti-env/bin/activate
 
 # Clone and install
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 ./install.sh all
 
@@ -348,7 +336,7 @@ python3 -m venv pytti-env
 source pytti-env/bin/activate
 
 # Clone and install
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 ./install.sh all
 
@@ -384,7 +372,7 @@ python -m venv pytti-env
 pytti-env\Scripts\activate
 
 # Clone and install
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 ./install.sh all
 
@@ -487,44 +475,6 @@ Should output: `1.26.4` (not 2.x.x)
 
 ---
 
-### "ModuleNotFoundError: No module named 'gma'" ⚠️ COMMON ISSUE
-
-**This is the #1 installation issue!**
-
-**Cause:** Git submodules weren't initialized. PyTTI needs vendor dependencies (GMA, AdaBins, CLIP, VQGAN).
-
-**Solution 1 - Use Install Script (Recommended):**
-```bash
-# If already cloned:
-cd pytti-core
-./install.sh all   # Linux/macOS
-# OR
-install.bat all    # Windows
-```
-
-**Solution 2 - Manual Fix:**
-```bash
-# Initialize submodules
-git submodule update --init --recursive
-
-# Install vendor dependencies
-pip install ./vendor/GMA
-pip install ./vendor/AdaBins
-pip install ./vendor/CLIP
-pip install ./vendor/taming-transformers
-
-# Reinstall PyTTI
-pip install -c constraints.txt -e ".[all]"
-```
-
-**Solution 3 - Fresh Install:**
-```bash
-# Clone with submodules from the start
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
-cd pytti-core
-./install.sh all
-```
-
 ---
 
 ### "No module named 'pytti'"
@@ -621,8 +571,8 @@ brew install ffmpeg
 For contributors and developers:
 
 ```bash
-# Clone with submodules
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+# Clone repository
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 
 # Install in editable mode with dev tools
@@ -706,7 +656,7 @@ After installation:
 
 **Recommended for most users:**
 ```bash
-git clone --recurse-submodules https://github.com/pytti-tools/pytti-core
+git clone https://github.com/pytti-tools/pytti-core
 cd pytti-core
 ./install.sh all  # or install.bat all on Windows
 pytti-webui

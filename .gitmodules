@@ -1,12 +1,13 @@
-[submodule "vendor/GMA"]
-	path = vendor/GMA
-	url = https://github.com/pytti-tools/GMA
-[submodule "vendor/AdaBins"]
-	path = vendor/AdaBins
-	url = https://github.com/pytti-tools/AdaBins
-[submodule "vendor/CLIP"]
-	path = vendor/CLIP
-	url = https://github.com/openai/CLIP
-[submodule "vendor/taming-transformers"]
-	path = vendor/taming-transformers
-	url = https://github.com/pytti-tools/taming-transformers
+# DEPRECATED: Git submodules are no longer used in PyTTI Modern
+#
+# PyTTI Modern uses modern AI models from PyPI packages:
+# - Depth: Depth-Anything-V2, Marigold (via transformers/diffusers)
+# - Flow: CoTracker, RAFT (via pip packages)
+# - CLIP: Modern CLIP, SigLIP (via transformers)
+# - Image Generation: SDXL, Flux (via diffusers)
+#
+# Legacy models (AdaBins, GMA, VQGAN) are no longer maintained
+# and have been replaced by superior modern alternatives.
+#
+# This file is kept only to prevent git errors.
+# The vendor/ directory and its submodules are obsolete.
