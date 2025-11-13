@@ -216,7 +216,7 @@ def create_advanced_parameters() -> Dict[str, Any]:
 
             # Show/hide animation controls based on mode
             def toggle_animation_controls(mode):
-                return gr.Row(visible=(mode != "Off"))
+                return gr.update(visible=(mode != "Off"))
 
             animation_mode.change(
                 fn=toggle_animation_controls,
