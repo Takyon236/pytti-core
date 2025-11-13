@@ -256,6 +256,7 @@ class PyTTIWebUI:
             server_name=server_name,
             inbrowser=inbrowser,
             show_error=True,
+            show_api=False,  # Disable API docs to avoid schema serialization issues
         )
 
 
