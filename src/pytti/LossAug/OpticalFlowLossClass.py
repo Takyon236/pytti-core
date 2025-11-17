@@ -13,11 +13,20 @@ from PIL import Image
 
 from torchvision.transforms import functional as TF
 
-import gma
-from gma.core.network import RAFTGMA
+# Optional dependency - GMA for optical flow
+try:
+    import gma
+    from gma.core.network import RAFTGMA
+    from gma.core.utils.utils import InputPadder
+    GMA_AVAILABLE = True
+except ImportError:
+    logger.warning("GMA (Generalized Motion Aggregation) not available. Optical flow features will be disabled.")
+    GMA_AVAILABLE = False
+    gma = None
+    RAFTGMA = None
+    InputPadder = None
 
 # from gma.core.utils import flow_viz
-from gma.core.utils.utils import InputPadder
 
 # from pytti import fetch, to_pil, DEVICE, vram_usage_mode
 from pytti import fetch, vram_usage_mode
@@ -27,36 +36,30 @@ from pytti.Transforms import apply_flow
 
 GMA = None
 
-try:
-    from importlib.resources import files as ir_files0
+def get_gma_checkpoint_path():
+    """Get GMA checkpoint path - only works if GMA is available."""
+    if not GMA_AVAILABLE:
+        raise ImportError("GMA is not installed. Install with: pip install pyttitools-gma")
 
-    logger.debug("using importlib.resources.files")
-
-    def get_gma_checkpoint_path():
+    try:
+        from importlib.resources import files as ir_files0
+        logger.debug("using importlib.resources.files")
         root = ir_files0(gma)
         checkpoint_path = str(next(root.glob("**/*sintel.pth")))
         return checkpoint_path
-
-except:
-    # Patch for colab using old importlib version
-    import pkg_resources
-
-    def ir_files1(module):
+    except:
+        # Patch for colab using old importlib version
+        import pkg_resources
         if pkg_resources.resource_exists(
             gma.__name__, "data/checkpoints/gma-sintel.pth"
         ):
             pathstr = pkg_resources.resource_filename(
                 gma.__name__, "data/checkpoints/gma-sintel.pth"
             )
-            logger.debug(pathstr)
+            logger.debug(f"using pkg_resources.resource_filename: {pathstr}")
             return Path(pathstr)
         else:
             raise ValueError("Unable to locate GMA checkpoint.")
-
-    logger.debug("using pkg_resources.resource_filename")
-
-    def get_gma_checkpoint_path():
-        return ir_files1(gma)
 
 
 def init_GMA(checkpoint_path=None, device=None):

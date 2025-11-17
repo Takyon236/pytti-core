@@ -1,7 +1,14 @@
 import gc
 import math
 
-from adabins.infer import InferenceHelper
+# Optional dependency - AdaBins for depth estimation
+try:
+    from adabins.infer import InferenceHelper
+    ADABINS_AVAILABLE = True
+except ImportError:
+    ADABINS_AVAILABLE = False
+    InferenceHelper = None
+
 from loguru import logger
 from PIL import Image
 import torch
@@ -11,11 +18,21 @@ from torchvision.transforms import functional as TF
 from pytti import DEVICE, vram_usage_mode
 from pytti.LossAug.MSELossClass import MSELoss
 
+# Warn after logger is imported
+if not ADABINS_AVAILABLE:
+    logger.warning("AdaBins not available. Depth estimation features will be disabled.")
+
 
 infer_helper = None
 
 
 def init_AdaBins(device=None):
+    if not ADABINS_AVAILABLE:
+        raise ImportError(
+            "AdaBins is not installed. Depth estimation features are disabled. "
+            "To install: pip install pyttitools-adabins"
+        )
+
     global infer_helper
     if infer_helper is None:
         with vram_usage_mode("AdaBins"):

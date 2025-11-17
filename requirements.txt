@@ -36,3 +36,15 @@ imageio>=2.31.0
 # Only install if you specifically need it and have compatible CUDA
 # xformers>=0.0.22; platform_system != "Darwin"  # Uncomment if needed
 
+# Optional: Advanced features (install separately if needed)
+# These are optional and the software will run without them
+# - pyttitools-gma: For optical flow / motion analysis features
+# - pyttitools-adabins: For depth estimation features
+#
+# To install optional features:
+#   pip install pyttitools-gma pyttitools-adabins
+#
+# Note: These may not be available on all platforms or may require
+# additional system dependencies. The software will work without them
+# but some advanced features will be disabled.
+

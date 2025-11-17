@@ -7,7 +7,17 @@ from pytti import parametric_eval
 from pytti.LossAug.DepthLossClass import DepthLoss
 
 # from pytti.Image.PixelImage import PixelImage
-from adabins.infer import InferenceHelper  # Not used here
+
+# Optional dependency - AdaBins for depth estimation
+try:
+    from adabins.infer import InferenceHelper
+    ADABINS_AVAILABLE = True
+except ImportError:
+    logger = None  # Will be imported below
+    if logger:
+        logger.warning("AdaBins not available. Depth estimation features will be limited.")
+    ADABINS_AVAILABLE = False
+    InferenceHelper = None
 
 # TB_LOGDIR = "logs"  # to do: make this more easily configurable
 from loguru import logger
