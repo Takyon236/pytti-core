@@ -20,5 +20,10 @@ setup(
         "depth": ["pyttitools-adabins"],
         "all": ["pyttitools-gma", "pyttitools-adabins"],
     },
+    entry_points={
+        "console_scripts": [
+            "pytti-webui=pytti.webui.__main__:run_with_checks",
+        ],
+    },
     python_requires=">=3.10",  # Support Python 3.10, 3.11, 3.12+
 )
