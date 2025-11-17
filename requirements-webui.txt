@@ -1,0 +1,17 @@
+# PyTTI Modern - Web UI Requirements
+#
+# Install with:
+#   pip install -r requirements-webui.txt
+#
+# Or install everything (core + modern + webui):
+#   pip install -r requirements.txt -r requirements-modern.txt -r requirements-webui.txt
+
+# Gradio - Web UI framework
+gradio>=4.44.0
+
+# Additional visualization
+plotly>=5.18.0  # For charts and graphs (optional, for future gallery features)
+
+# Note: Core PyTTI dependencies and modern AI dependencies should be installed separately:
+#   pip install -r requirements.txt
+#   pip install -r requirements-modern.txt
