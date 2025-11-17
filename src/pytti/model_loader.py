@@ -25,6 +25,31 @@ from huggingface_hub import hf_hub_download, snapshot_download
 # PyTTI's existing VRAM tools
 from pytti import vram_usage_mode
 
+# Disable xformers if it's broken/incompatible
+# This must happen before any diffusers imports
+try:
+    import xformers.ops
+    logger.debug("xformers is available")
+except Exception as e:
+    logger.warning(f"xformers is unavailable or incompatible with current PyTorch version")
+    logger.warning(f"  Error: {str(e)[:100]}")
+    logger.info("Attempting to disable xformers for diffusers...")
+
+    # Mock xformers to prevent diffusers from trying to use it
+    import sys
+    from types import ModuleType
+
+    # Create a fake xformers module that doesn't crash
+    fake_xformers = ModuleType('xformers')
+    fake_xformers_ops = ModuleType('xformers.ops')
+    fake_xformers.ops = fake_xformers_ops
+
+    sys.modules['xformers'] = fake_xformers
+    sys.modules['xformers.ops'] = fake_xformers_ops
+
+    logger.info("✓ Created xformers stub to prevent import errors")
+    logger.info("💡 To fix this permanently, run: pip install xformers --force-reinstall")
+
 
 class ModelType(Enum):
     """Enumeration of supported model types"""
