@@ -14,4 +14,5 @@ setup(
         "": "src",
     },
     install_requires=["pyttitools-adabins", "pyttitools-gma"],
+    python_requires=">=3.10,<3.13",  # Explicitly specify Python version compatibility
 )
