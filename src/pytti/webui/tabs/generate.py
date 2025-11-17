@@ -175,7 +175,32 @@ def create_generate_tab(shared_state: SharedState) -> Dict[str, Any]:
                 "",
             )
 
-        # Build configuration from UI inputs
+        # Safe type conversions with fallbacks
+        from pytti.validation import ConfigValidator
+
+        def safe_int(value, default, param_name=None):
+            """Safely convert to int with validation"""
+            try:
+                int_val = int(float(value))  # Handle string floats like "1024.0"
+                if param_name:
+                    return ConfigValidator.get_safe_value(param_name, int_val)
+                return int_val
+            except (ValueError, TypeError):
+                logger.warning(f"Invalid int value '{value}', using default: {default}")
+                return default
+
+        def safe_float(value, default, param_name=None):
+            """Safely convert to float with validation"""
+            try:
+                float_val = float(value)
+                if param_name:
+                    return ConfigValidator.get_safe_value(param_name, float_val)
+                return float_val
+            except (ValueError, TypeError):
+                logger.warning(f"Invalid float value '{value}', using default: {default}")
+                return default
+
+        # Build configuration from UI inputs with safe conversions
         config = {
             "diffusion_model": diffusion_model,
             "depth_model": depth_model,
@@ -185,19 +210,19 @@ def create_generate_tab(shared_state: SharedState) -> Dict[str, Any]:
             "enable_xformers": enable_xformers,
             "prompt": prompt,
             "negative_prompt": negative_prompt,
-            "width": int(width),
-            "height": int(height),
-            "steps_per_scene": int(steps_per_scene),
-            "learning_rate": float(learning_rate),
-            "cutouts": int(cutouts),
-            "cut_pow": float(cut_pow),
-            "ema_val": float(ema_val),
+            "width": safe_int(width, 1024, "width"),
+            "height": safe_int(height, 1024, "height"),
+            "steps_per_scene": safe_int(steps_per_scene, 200, "steps_per_scene"),
+            "learning_rate": safe_float(learning_rate, 0.1, "learning_rate"),
+            "cutouts": safe_int(cutouts, 40, "cutouts"),
+            "cut_pow": safe_float(cut_pow, 2.0, "cut_pow"),
+            "ema_val": safe_float(ema_val, 0.99, "ema_val"),
             "animation_mode": animation_mode,
-            "frames": int(frames) if animation_mode != "Off" else 1,
-            "steps_per_frame": int(steps_per_frame) if animation_mode != "Off" else 0,
-            "save_every": int(save_every),
-            "file_namespace": file_namespace,
-            "seed": int(seed),
+            "frames": safe_int(frames, 1) if animation_mode != "Off" else 1,
+            "steps_per_frame": safe_int(steps_per_frame, 0) if animation_mode != "Off" else 0,
+            "save_every": safe_int(save_every, 50, "save_every"),
+            "file_namespace": file_namespace if file_namespace else "default",
+            "seed": safe_int(seed, -1, "seed"),
         }
 
         logger.info(f"Starting generation with config: {config}")

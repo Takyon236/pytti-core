@@ -239,6 +239,12 @@ def generate_image(
                 # Compute CLIP loss
                 clip_loss = prompt_obj.compute_loss(current_image)
 
+                # Check for NaN/Inf in loss (prevents crashes from numerical instability)
+                if not torch.isfinite(clip_loss):
+                    logger.warning(f"Step {step}: Loss is NaN/Inf, skipping update")
+                    failed_steps += 1
+                    continue
+
                 # Compute gradients
                 if current_latent.grad is not None:
                     current_latent.grad.zero_()
@@ -248,6 +254,12 @@ def generate_image(
                 # Update latent with gradient descent
                 with torch.no_grad():
                     if current_latent.grad is not None:
+                        # Check for NaN/Inf in gradients
+                        if not torch.isfinite(current_latent.grad).all():
+                            logger.warning(f"Step {step}: Gradients contain NaN/Inf, skipping update")
+                            failed_steps += 1
+                            continue
+
                         current_latent -= learning_rate * current_latent.grad
 
                     # Apply EMA smoothing (PyTTI's temporal coherence)

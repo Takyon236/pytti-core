@@ -287,13 +287,31 @@ def zoom_3d(
         device = img.device
 
     width, height = img.image_shape
+
+    # Defensive check for division by zero
+    if height == 0:
+        logger.error("Invalid height (0) in transform - using default")
+        height = 512
+
     px = 2 / height
     alpha = math.radians(fov)
-    depth = 1 / (math.tan(alpha / 2))
+
+    # Defensive check for tan(alpha/2) = 0
+    tan_half_alpha = math.tan(alpha / 2)
+    if abs(tan_half_alpha) < 1e-6:
+        logger.warning(f"FOV angle {fov} deg causes numerical instability, using safe default")
+        depth = 1.0
+    else:
+        depth = 1 / tan_half_alpha
 
     pil_image = img.decode_image()
 
-    f = width / height
+    # Defensive check for aspect ratio calculation
+    if height == 0:
+        logger.error("Invalid height (0) for aspect ratio - using square aspect")
+        f = 1.0
+    else:
+        f = width / height
 
     # ============================================
     # UPDATED: Use modern depth estimation
@@ -320,6 +338,12 @@ def zoom_3d(
     # PyTTI's parametric motion: Calculate depth statistics
     depth_median = np.median(depth_map.flatten())
     depth_mean = np.mean(depth_map)
+
+    # Defensive check for division by px
+    if abs(px) < 1e-6:
+        logger.error("px value too small, using safe default")
+        px = 0.01
+
     r = depth_min / px
     R = depth_max / px
     mu = (depth_mean + depth_median) / (2 * px)
