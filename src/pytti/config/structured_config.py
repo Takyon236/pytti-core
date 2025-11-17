@@ -183,15 +183,29 @@ class ConfigSchema:
     ############
     ### CLIP ###
     ############
+    # NOTE: These are sanitized config field names, not actual model identifiers.
+    # Actual CLIP model names use different formats (e.g., "ViT-B/32", "ViT-L/14@336px").
+    # The mapping from these config names to actual model names happens at runtime
+    # in Notebook.py via SUPPORTED_CLIP_MODELS dictionary.
+    #
+    # For a more consistent approach, consider using mmc_models which accepts
+    # actual model identifiers directly.
 
     ViTB32: bool = True
     ViTB16: bool = False
     ViTL14: bool = False
+    ViTL14_336px: bool = False
     RN50: bool = False
     RN101: bool = False
     RN50x4: bool = False
     RN50x16: bool = False
     RN50x64: bool = False
+
+    # Alternative model loading via Multi-Modal Comparators (MMC)
+    # When use_mmc is True, the above CLIP boolean flags are ignored
+    # and models are loaded based on mmc_models list instead
+    use_mmc: bool = False
+    mmc_models: Optional[list] = None
 
     ###############
     ### Outputs ###
@@ -227,6 +241,7 @@ class ConfigSchema:
     ##########################
 
     gradient_accumulation_steps: int = 1
+    device: int = 0  # CUDA device index, or CPU if CUDA unavailable
 
 
 def register():

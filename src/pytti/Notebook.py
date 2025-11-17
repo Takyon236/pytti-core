@@ -215,6 +215,19 @@ def save_batch(settings_list, path):
 
 
 def _sanitize_for_config(in_str):
+    """Convert actual CLIP model names to config-safe field names.
+
+    Transforms model identifiers like "ViT-B/32" or "ViT-L/14@336px"
+    into config field names like "ViTB32" or "ViTL14_336px".
+
+    This creates an abstraction layer between:
+    - Config field names (used in YAML and structured_config.py)
+    - Actual model identifiers (used by CLIP library)
+
+    NOTE: This is a legacy pattern. For new code, prefer using MMC
+    (mmc_models) which accepts actual model identifiers directly,
+    avoiding the need for name sanitization.
+    """
     for char in ("/", "-"):
         in_str = in_str.replace(char, "")
     for char in "@":
@@ -222,6 +235,8 @@ def _sanitize_for_config(in_str):
     return in_str
 
 
+# Maps config field names (sanitized) to actual CLIP model identifiers
+# e.g., {"ViTB32": "ViT-B/32", "ViTL14_336px": "ViT-L/14@336px"}
 SUPPORTED_CLIP_MODELS = {
     _sanitize_for_config(model_name): model_name
     for model_name in clip.available_models()
