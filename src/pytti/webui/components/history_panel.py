@@ -78,7 +78,7 @@ class HistoryPanel:
         return choices, prompts_map
 
     @staticmethod
-    def refresh_history() -> gr.Dropdown:
+    def refresh_history() -> dict:
         """
         Refresh history dropdown.
 
@@ -86,10 +86,10 @@ class HistoryPanel:
             Updated dropdown component
         """
         choices, prompts_map = HistoryPanel.get_history_choices()
-        return gr.Dropdown(choices=choices)
+        return gr.update(choices=choices)
 
     @staticmethod
-    def show_favorites() -> gr.Dropdown:
+    def show_favorites() -> dict:
         """
         Show only favorite prompts.
 
@@ -100,10 +100,10 @@ class HistoryPanel:
         favorites = history_manager.get_favorites()
 
         choices = [entry.get_display_text(60) for entry in favorites]
-        return gr.Dropdown(choices=choices)
+        return gr.update(choices=choices)
 
     @staticmethod
-    def search_history(query: str) -> gr.Dropdown:
+    def search_history(query: str) -> dict:
         """
         Search history and update dropdown.
 
@@ -120,7 +120,7 @@ class HistoryPanel:
         results = history_manager.search(query)
 
         choices = [entry.get_display_text(60) for entry in results]
-        return gr.Dropdown(choices=choices)
+        return gr.update(choices=choices)
 
     @staticmethod
     def clear_history_confirm() -> str:
