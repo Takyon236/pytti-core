@@ -30,36 +30,10 @@ from pytti.rotoscoper import (
     update_rotoscopers,
 )
 
+from pytti.Notebook import make_hbox
+
 # OUTPATH = f"{os.getcwd()}/images_out/"
 OUTPATH = f"{os.getcwd()}/images_out"
-
-
-def make_hbox(im, fig):
-    # https://stackoverflow.com/questions/51315566/how-to-display-the-images-side-by-side-in-jupyter-notebook/51316108
-    import io
-    import ipywidgets as widgets
-    from ipywidgets import Layout
-
-    with io.BytesIO() as buf:
-        im.save(buf, format="png")
-        buf.seek(0)
-        wi1 = widgets.Image(
-            value=buf.read(),
-            format="png",
-            layout=Layout(border="0", margin="0", padding="0"),
-        )
-    with io.BytesIO() as buf:
-        fig.savefig(buf, format="png", bbox_inches="tight")
-        buf.seek(0)
-        wi2 = widgets.Image(
-            value=buf.read(),
-            format="png",
-            layout=Layout(border="0", margin="0", padding="0"),
-        )
-    return widgets.HBox(
-        [wi1, wi2],
-        layout=Layout(border="0", margin="0", padding="0", align_items="flex-start"),
-    )
 
 
 # Update is called each step.

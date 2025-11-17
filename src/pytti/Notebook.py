@@ -244,32 +244,19 @@ SUPPORTED_CLIP_MODELS = {
 
 logger.debug(SUPPORTED_CLIP_MODELS)
 
-# this doesn't belong here
-CLIP_MODEL_NAMES = None
-
-
 def load_clip(params, device=None):
 
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # refactor to specify this stuff in a config file
-    global CLIP_MODEL_NAMES
-    if CLIP_MODEL_NAMES is not None:
-        last_names = CLIP_MODEL_NAMES
-    else:
-        last_names = []
-    CLIP_MODEL_NAMES = []
-    # this "last_names" thing is way over complicated,
-    # and also a notebook-specific... pattern. deprecate this later as part of
-    # cleaning up globals.
-
+    # Build list of CLIP models to load from config
+    clip_model_names = []
     for config_name, clip_name in SUPPORTED_CLIP_MODELS.items():
         if params.get(config_name):
-            CLIP_MODEL_NAMES.append(clip_name)
+            clip_model_names.append(clip_name)
 
     # Warn if both standard CLIP and MMC are configured
-    if params.get("use_mmc") and CLIP_MODEL_NAMES:
+    if params.get("use_mmc") and clip_model_names:
         logger.warning(
             "Both use_mmc=true and standard CLIP models are enabled. "
             "Standard CLIP settings will be ignored. Set all CLIP model flags to false "
@@ -277,14 +264,15 @@ def load_clip(params, device=None):
         )
 
     if not params.get("use_mmc"):
-        if last_names != CLIP_MODEL_NAMES or Perceptor.CLIP_PERCEPTORS is None:
-            if CLIP_MODEL_NAMES == []:
-                Perceptor.free_clip()
-                raise RuntimeError("Please select at least one CLIP model")
+        # Standard CLIP loading
+        if not clip_model_names:
             Perceptor.free_clip()
-            logger.debug("Loading CLIP...")
-            Perceptor.init_clip(CLIP_MODEL_NAMES, device=device)
-            logger.debug("CLIP loaded.")
+            raise RuntimeError("Please select at least one CLIP model")
+
+        Perceptor.free_clip()
+        logger.debug(f"Loading CLIP models: {clip_model_names}")
+        Perceptor.init_clip(clip_model_names, device=device)
+        logger.debug("CLIP loaded.")
     else:
         logger.debug("attempting to use mmc to load perceptors")
 
