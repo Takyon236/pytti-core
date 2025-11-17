@@ -243,6 +243,15 @@ class ConfigSchema:
     gradient_accumulation_steps: int = 1
     device: int = 0  # CUDA device index, or CPU if CUDA unavailable
 
+    def __attrs_post_init__(self):
+        """Validate configuration after initialization."""
+        # Validate use_mmc and mmc_models are consistent
+        if self.use_mmc and (self.mmc_models is None or len(self.mmc_models) == 0):
+            raise ValueError(
+                "use_mmc is enabled but mmc_models is empty or not configured. "
+                "Either set use_mmc: false or provide a list of models in mmc_models"
+            )
+
 
 def register():
     cs = ConfigStore.instance()

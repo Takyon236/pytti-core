@@ -159,6 +159,14 @@ def mask_semantic(text, device=None):
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     perceptors = pytti.Perceptor.CLIP_PERCEPTORS
+
+    # Validate perceptors are loaded
+    if perceptors is None or len(perceptors) == 0:
+        raise RuntimeError(
+            "No CLIP models loaded. Please enable at least one CLIP model "
+            "(e.g., ViTB32: true) or configure mmc_models"
+        )
+
     embeds = cat_with_pad(
         [p.encode_text(clip.tokenize(text).to(device)).float() for p in perceptors]
     )
@@ -221,6 +229,14 @@ def parse_prompt(embedder, prompt_string="", pil_image=None, device=None):
         )
     else:
         perceptors = pytti.Perceptor.CLIP_PERCEPTORS
+
+        # Validate perceptors are loaded
+        if perceptors is None or len(perceptors) == 0:
+            raise RuntimeError(
+                "No CLIP models loaded. Please enable at least one CLIP model "
+                "(e.g., ViTB32: true) or configure mmc_models"
+            )
+
         embeds = cat_with_pad(
             [p.encode_text(clip.tokenize(text).to(device)).float() for p in perceptors]
         )

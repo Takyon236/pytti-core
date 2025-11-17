@@ -50,6 +50,14 @@ class HDMultiClipEmbedder(nn.Module):
         self.device = device
         if perceptors is None:
             perceptors = pytti.Perceptor.CLIP_PERCEPTORS
+
+        # Validate perceptors are loaded
+        if perceptors is None or len(perceptors) == 0:
+            raise RuntimeError(
+                "No CLIP models loaded. Please enable at least one CLIP model "
+                "(e.g., ViTB32: true) or configure mmc_models"
+            )
+
         self.cut_sizes = [p.visual.input_resolution for p in perceptors]
         self.cutn = cutn
         self.noise_fac = noise_fac

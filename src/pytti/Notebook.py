@@ -279,6 +279,14 @@ def load_clip(params, device=None):
             logger.debug("CLIP loaded.")
     else:
         logger.debug("attempting to use mmc to load perceptors")
+
+        # Validate mmc_models is provided and not empty
+        if not params.get("mmc_models"):
+            raise RuntimeError(
+                "use_mmc is enabled but mmc_models is not configured. "
+                "Please provide a list of models in mmc_models, or set use_mmc: false"
+            )
+
         import mmc
         from mmc.registry import REGISTRY
         import mmc.loaders  # force trigger model registrations
@@ -296,5 +304,13 @@ def load_clip(params, device=None):
                 model = model_loader.load()
                 model = MockOpenaiClip(model)
                 CLIP_PERCEPTORS.append(model)
+
+        # Validate that at least one model was loaded
+        if not CLIP_PERCEPTORS:
+            raise RuntimeError(
+                "No models were loaded via MMC. Check that your mmc_models "
+                "configuration matches available models (run: python -m mmc.loaders)"
+            )
+
         logger.debug(CLIP_PERCEPTORS)
         Perceptor.CLIP_PERCEPTORS = CLIP_PERCEPTORS  # weird that htis works, but fine.
