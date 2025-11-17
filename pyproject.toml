@@ -110,7 +110,7 @@ Repository = "https://github.com/pytti-tools/pytti-core"
 "Bug Tracker" = "https://github.com/pytti-tools/pytti-core/issues"
 
 [project.scripts]
-pytti-webui = "pytti.webui.app:main"
+pytti-webui = "pytti.webui.__main__:run_with_checks"
 pytti-validate = "pytti.validate_installation:main"
 pytti-migrate = "pytti.migrate_config:main"
 
