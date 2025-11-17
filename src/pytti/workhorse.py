@@ -188,16 +188,28 @@ def _main(cfg: DictConfig):
     # params = OmegaConf.to_container(cfg, resolve=True)
     params = cfg
 
+    # Handle device selection with proper validation
     if torch.cuda.is_available():
-        _device = params.get("device", 0)
+        device_param = params.get("device", 0)
+        # Validate device index is within bounds
+        if isinstance(device_param, int):
+            if device_param < 0 or device_param >= torch.cuda.device_count():
+                raise ValueError(
+                    f"Device index {device_param} is out of range. "
+                    f"Available CUDA devices: 0-{torch.cuda.device_count()-1}"
+                )
+            _device = device_param
+            torch.cuda.set_device(_device)
+        else:
+            _device = 0  # Default to first GPU if non-integer provided
+            torch.cuda.set_device(_device)
     else:
-        _device = params.get("device", "cpu")
+        _device = "cpu"
+
     if params.get("device") is None:
-        # params["device"] = _device
         with open_dict(params) as p:
             p.device = _device
     logger.debug(f"Using device {_device}")
-    torch.cuda.set_device(_device)
 
     # literal "off" in yaml interpreted as False
     if params.animation_mode == False:

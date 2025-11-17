@@ -268,6 +268,14 @@ def load_clip(params, device=None):
         if params.get(config_name):
             CLIP_MODEL_NAMES.append(clip_name)
 
+    # Warn if both standard CLIP and MMC are configured
+    if params.get("use_mmc") and CLIP_MODEL_NAMES:
+        logger.warning(
+            "Both use_mmc=true and standard CLIP models are enabled. "
+            "Standard CLIP settings will be ignored. Set all CLIP model flags to false "
+            "when using MMC, or set use_mmc: false to use standard CLIP models."
+        )
+
     if not params.get("use_mmc"):
         if last_names != CLIP_MODEL_NAMES or Perceptor.CLIP_PERCEPTORS is None:
             if CLIP_MODEL_NAMES == []:

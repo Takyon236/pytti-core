@@ -61,32 +61,65 @@ VQGAN_CHECKPOINT_URLS = {
 
 
 def _download(url, dest):
+    import socket
+    from urllib.error import URLError, HTTPError
+
     os.makedirs(os.path.dirname(dest), exist_ok=True)
 
-    with urllib.request.urlopen(url) as source:
-        file_size = int(source.info().get("Content-Length"))
+    try:
+        with urllib.request.urlopen(url, timeout=30) as source:
+            file_size = int(source.info().get("Content-Length"))
 
-        # Check if file already downloaded
-        if os.path.isfile(dest):
-            if os.path.getsize(dest) == file_size:
-                return True
-            else:
-                logger.warning(
-                    f"WARNING: Pre-existing file at {dest} does not match the download size, overwriting."
-                )
+            # Check if file already downloaded
+            if os.path.isfile(dest):
+                if os.path.getsize(dest) == file_size:
+                    return True
+                else:
+                    logger.warning(
+                        f"WARNING: Pre-existing file at {dest} does not match the download size, overwriting."
+                    )
 
-        print(f"Downloading {url} to {dest} ({file_size//1024}KB)")
+            print(f"Downloading {url} to {dest} ({file_size//1024}KB)")
 
-        with open(dest, "wb") as output, tqdm(total=file_size) as loop:
-            while True:
-                buffer = source.read(8192)
-                if not buffer:
-                    break
+            # Use temporary file to prevent partial downloads
+            dest_tmp = dest + ".tmp"
+            try:
+                with open(dest_tmp, "wb") as output, tqdm(total=file_size) as loop:
+                    while True:
+                        buffer = source.read(8192)
+                        if not buffer:
+                            break
 
-                output.write(buffer)
-                loop.update(len(buffer))
+                        output.write(buffer)
+                        loop.update(len(buffer))
 
-        return os.path.getsize(dest) == file_size
+                # Verify download completed successfully
+                if os.path.getsize(dest_tmp) == file_size:
+                    os.rename(dest_tmp, dest)
+                    return True
+                else:
+                    logger.error(f"Download incomplete: expected {file_size} bytes, got {os.path.getsize(dest_tmp)}")
+                    os.remove(dest_tmp)
+                    return False
+
+            except Exception as e:
+                # Clean up partial download
+                if os.path.exists(dest_tmp):
+                    os.remove(dest_tmp)
+                raise
+
+    except HTTPError as e:
+        logger.error(f"HTTP error downloading {url}: {e.code} {e.reason}")
+        raise RuntimeError(f"Failed to download model from {url}: HTTP {e.code}")
+    except URLError as e:
+        logger.error(f"URL error downloading {url}: {e.reason}")
+        raise RuntimeError(f"Failed to download model from {url}: {e.reason}")
+    except socket.timeout:
+        logger.error(f"Timeout downloading {url}")
+        raise RuntimeError(f"Download timed out for {url}")
+    except Exception as e:
+        logger.error(f"Unexpected error downloading {url}: {e}")
+        raise RuntimeError(f"Failed to download model: {e}")
 
 
 def load_vqgan_model(config_path, checkpoint_path):
