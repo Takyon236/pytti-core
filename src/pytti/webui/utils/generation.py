@@ -96,13 +96,18 @@ def generate_image(
 
             # Map UI model names to model IDs
             model_map = {
+                "Stable Diffusion 1.5": "sd_1.5",
                 "Stable Diffusion XL": "sdxl",
+                "SDXL Turbo": "sdxl_turbo",
+                "Stable Diffusion 3.5": "sd3.5",
                 "Flux Schnell": "flux_schnell",
                 "Flux Dev": "flux_dev",
-                "Stable Diffusion 1.5": "sd_1.5",
             }
 
-            model_id = model_map.get(config["diffusion_model"], "sdxl")
+            model_id = model_map.get(config["diffusion_model"])
+            if not model_id:
+                logger.warning(f"Unknown model '{config['diffusion_model']}', defaulting to SDXL")
+                model_id = "sdxl"
 
             # Create image model with error handling
             if "Flux" in config["diffusion_model"]:
@@ -155,13 +160,21 @@ def generate_image(
 
             # Map UI names to model names
             clip_model_map = {
+                # UI choices from model_selector.py
+                "SigLIP (Recommended)": "ViT-B/16",  # SigLIP fallback to ViT-B/16 for now
+                "OpenCLIP ViT-H-14": "ViT-H-14",
+                "OpenCLIP ViT-L-14": "ViT-L-14",
+                "OpenAI CLIP ViT-L/14": "ViT-L/14",
+                # Legacy names (for backwards compatibility)
                 "ViT-B/32 (Fast)": "ViT-B/32",
                 "ViT-B/16 (Balanced)": "ViT-B/16",
                 "ViT-L/14 (Quality)": "ViT-L/14",
-                "SigLIP (Recommended)": "ViT-B/16",  # SigLIP fallback to ViT-B/16 for now
             }
 
             clip_model = clip_model_map.get(clip_model_name, clip_model_name)
+            if clip_model not in clip_model_map.values() and clip_model != clip_model_name:
+                logger.warning(f"Unknown CLIP model '{clip_model_name}', using default ViT-B/32")
+                clip_model = "ViT-B/32"
             clip_models = [clip_model]
 
             clip_manager.initialize(clip_models, device=shared_state.device)

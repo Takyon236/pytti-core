@@ -33,17 +33,24 @@ class ConfigValidator:
     # Valid model names
     VALID_MODELS = {
         "diffusion": [
+            "Stable Diffusion 1.5",
             "Stable Diffusion XL",
+            "SDXL Turbo",
+            "Stable Diffusion 3.5",
             "Flux Schnell",
             "Flux Dev",
-            "Stable Diffusion 1.5",
         ],
         "clip": [
+            "SigLIP (Recommended)",
+            "OpenCLIP ViT-H-14",
+            "OpenCLIP ViT-L-14",
+            "OpenAI CLIP ViT-L/14",
+            # Legacy names for backwards compatibility
             "ViT-B/32",
             "ViT-B/16",
             "ViT-L/14",
             "ViT-L/14@336px",
-            "SigLIP",
+            "ViT-H-14",
         ],
     }
 
