@@ -1,87 +1,73 @@
-# Python Version Compatibility Guide
+# Python Version Compatibility
 
-## Quick Diagnosis
+## Quick Start
 
-If you're getting this error:
-```
-RuntimeError: operator torchvision::nms does not exist
-```
-
-**You're likely using Python 3.12 with incompatible PyTorch versions.**
-
-## Recommended Solution
-
-### Option 1: Use Python 3.10 or 3.11 (RECOMMENDED)
-
-This is the most stable approach as it matches the tested configuration:
+**Python 3.10, 3.11, or 3.12 are all fully supported.**
 
 ```bash
-# Create new conda environment with Python 3.11
-conda create -n pytti python=3.11
+# Create environment with your preferred Python version
+conda create -n pytti python=3.12  # or 3.11, or 3.10
 conda activate pytti
 
-# Navigate to pytti-core directory
+# Install
 cd /path/to/pytti-core
-
-# Install dependencies
 pip install -r requirements.txt
 pip install -e .
+
+# Run
+pytti-webui
 ```
-
-### Option 2: Use Python 3.12 with Updated Dependencies
-
-If you must use Python 3.12:
-
-```bash
-# Use the Python 3.12 compatible requirements
-pip install -r requirements-py312.txt
-pip install -e .
-```
-
-**Warning:** Python 3.12 support is newer and less tested. You may encounter other compatibility issues.
-
-## About xformers
-
-If you see errors about `xformers`:
-
-1. **Don't install xformers unless you specifically need it** - it's optional
-2. If you do need it, install the version matching your CUDA and PyTorch:
-   ```bash
-   # For CUDA 11.8 and torch 2.1+
-   pip install xformers>=0.0.22
-   ```
-3. If xformers installation breaks things, uninstall it:
-   ```bash
-   pip uninstall xformers
-   ```
 
 ## Supported Python Versions
 
-| Python Version | Status | PyTorch Version | Notes |
-|----------------|--------|----------------|-------|
-| 3.10 | ✅ Fully Supported | 1.13.1 | Recommended |
-| 3.11 | ✅ Fully Supported | 1.13.1 | Recommended |
-| 3.12 | ⚠️ Requires Updates | 2.1.0+ | Use requirements-py312.txt |
-| 3.13+ | ❌ Not Supported | - | Too new |
+| Python Version | Status | Notes |
+|----------------|--------|-------|
+| 3.10 | ✅ Fully Supported | Stable |
+| 3.11 | ✅ Fully Supported | Stable |
+| 3.12 | ✅ Fully Supported | Modern, recommended |
+| 3.13+ | ❌ Not Tested | May work but untested |
 
-## Troubleshooting
+## Common Errors and Fixes
 
 ### "RuntimeError: operator torchvision::nms does not exist"
-- **Cause:** PyTorch/torchvision version incompatible with your Python version
-- **Fix:** Use Python 3.10 or 3.11, or upgrade PyTorch (see above)
+
+**Cause:** Old PyTorch version installed (likely torch < 2.1.0)
+
+**Fix:**
+```bash
+# Uninstall old versions
+pip uninstall torch torchvision -y
+
+# Reinstall from requirements
+pip install -r requirements.txt
+```
 
 ### "ModuleNotFoundError: No module named 'xformers'"
-- **Cause:** Code trying to import optional xformers
-- **Fix:** Either install xformers or ignore (it's optional)
+
+**Cause:** Code trying to import optional xformers library
+
+**Fix:** xformers is **completely optional** and often causes problems. You don't need it.
+
+If you want to try it anyway:
+```bash
+pip install xformers>=0.0.22
+```
+
+If it breaks things, remove it:
+```bash
+pip uninstall xformers
+```
 
 ### "ImportError: cannot import name 'xxx' from 'torchvision'"
-- **Cause:** Version mismatch between torch and torchvision
-- **Fix:** Reinstall matching versions:
-  ```bash
-  pip install torch==1.13.1 torchvision==0.14.1  # For Python 3.10/3.11
-  # OR
-  pip install torch>=2.1.0 torchvision>=0.16.0   # For Python 3.12
-  ```
+
+**Cause:** Mismatched torch/torchvision versions
+
+**Fix:**
+```bash
+# Clean reinstall
+pip uninstall torch torchvision -y
+pip install -r requirements.txt
+```
 
 ## Clean Installation (Reset Everything)
 
@@ -92,8 +78,8 @@ If you're stuck in dependency hell:
 conda deactivate
 conda env remove -n pytti
 
-# Create fresh environment with correct Python version
-conda create -n pytti python=3.11
+# Create fresh environment
+conda create -n pytti python=3.12
 conda activate pytti
 
 # Clean pip cache
@@ -103,14 +89,29 @@ pip cache purge
 cd /path/to/pytti-core
 pip install -r requirements.txt
 pip install -e .
+
+# Test
+pytti-webui
 ```
 
-## Why These Errors Happen
+## What Changed
 
-The original `requirements.txt` was created for Python 3.10/3.11 with:
+The original `requirements.txt` used ancient dependencies:
 - `torch==1.13.1` (January 2023)
-- `torchvision==0.14.1` (January 2023)
+- `Pillow==7.1` (March 2020!)
+- `imageio==2.4.1` (January 2018!)
 
-Python 3.12 was released **October 2023**, after these PyTorch versions. The old PyTorch C++ extensions don't work with Python 3.12's updated C API.
+These don't work with Python 3.12 and have security/bug issues.
 
-Solution: Either use older Python (stable) or newer PyTorch (experimental).
+**New requirements.txt uses modern versions:**
+- `torch>=2.1.0` (Python 3.12 support)
+- `Pillow>=10.0.0` (current stable)
+- `imageio>=2.31.0` (current stable)
+- All dependencies updated to compatible versions
+
+## Troubleshooting Tips
+
+1. **Always use a fresh conda environment** - don't try to install into an existing environment with conflicts
+2. **Don't install xformers** unless you know you need it
+3. **Use Python 3.12** for the most modern experience
+4. **If something breaks**, start fresh with a clean environment
