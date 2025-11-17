@@ -245,6 +245,19 @@ class PyTTIWebUI:
         """
         app = self.build_ui()
 
+        # Monkey-patch to suppress API schema generation errors
+        # This is a workaround for Gradio's schema serialization bug
+        original_get_api_info = app.get_api_info
+        def patched_get_api_info(*args, **kwargs):
+            try:
+                return original_get_api_info(*args, **kwargs)
+            except TypeError as e:
+                if "argument of type 'bool' is not iterable" in str(e):
+                    logger.warning("Suppressed Gradio API schema generation error (known issue)")
+                    return {"named_endpoints": {}, "unnamed_endpoints": {}}
+                raise
+        app.get_api_info = patched_get_api_info
+
         logger.info(f"Launching PyTTI Web UI on http://{server_name}:{server_port}")
 
         if share:
@@ -256,7 +269,7 @@ class PyTTIWebUI:
             server_name=server_name,
             inbrowser=inbrowser,
             show_error=True,
-            show_api=False,  # Disable API docs to avoid schema serialization issues
+            show_api=False,  # Disable API docs display
         )
 
 
