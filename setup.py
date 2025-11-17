@@ -13,6 +13,12 @@ setup(
     package_dir={
         "": "src",
     },
-    install_requires=["pyttitools-adabins", "pyttitools-gma"],
+    install_requires=[],  # All dependencies in requirements.txt
+    extras_require={
+        # Optional features - install with: pip install pytti-core[optical-flow]
+        "optical-flow": ["pyttitools-gma"],
+        "depth": ["pyttitools-adabins"],
+        "all": ["pyttitools-gma", "pyttitools-adabins"],
+    },
     python_requires=">=3.10",  # Support Python 3.10, 3.11, 3.12+
 )
