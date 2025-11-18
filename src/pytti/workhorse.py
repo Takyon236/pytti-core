@@ -367,7 +367,8 @@ def _main(cfg: DictConfig):
                 "Please document the circumstances under which you observed this "
                 "message here: https://github.com/pytti-tools/pytti-core/issues/new"
             )
-            raise NotSupportedError
+            # Fix: Use NotImplementedError (built-in) instead of undefined NotSupportedError
+            raise NotImplementedError
 
         #######################################
 
