@@ -1,22 +1,18 @@
-from pathlib import Path
-from os.path import exists as path_exists
-import sys
 import os
-
-from loguru import logger
-
-
-from taming.models import cond_transformer, vqgan
-
-from pytti import replace_grad, clamp_with_grad, vram_usage_mode
-import torch
-from torch.nn import functional as F
-from pytti.image_models import EMAImage
-from torchvision.transforms import functional as TF
-from PIL import Image
-from omegaconf import OmegaConf
 import urllib.request
+from pathlib import Path
+
+import torch
+from loguru import logger
+from omegaconf import OmegaConf
+from PIL import Image
+from taming.models import cond_transformer, vqgan
+from torch.nn import functional as F
+from torchvision.transforms import functional as TF
 from tqdm import tqdm
+
+from pytti import clamp_with_grad, replace_grad, vram_usage_mode
+from pytti.image_models import EMAImage
 
 VQGAN_MODEL = None
 VQGAN_NAME = None
@@ -62,7 +58,7 @@ VQGAN_CHECKPOINT_URLS = {
 
 def _download(url, dest):
     import socket
-    from urllib.error import URLError, HTTPError
+    from urllib.error import HTTPError, URLError
 
     os.makedirs(os.path.dirname(dest), exist_ok=True)
 

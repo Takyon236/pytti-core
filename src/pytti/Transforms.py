@@ -1,8 +1,12 @@
-import glm, gc, torch, math, os
-import torchvision.transforms.functional as TF
-import torch.nn.functional as F
-from PIL import Image, ImageFilter
+import math
+
+import glm
 import numpy as np
+import torch
+import torch.nn.functional as F
+import torchvision.transforms.functional as TF
+from PIL import Image
+
 from pytti import parametric_eval
 from pytti.LossAug.DepthLossClass import DepthLoss
 

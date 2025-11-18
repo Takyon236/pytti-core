@@ -1,36 +1,18 @@
-from pathlib import Path
 import os
-import subprocess
+from pathlib import Path
 
-from PIL import Image
 import numpy as np
 import torch
 from IPython import display
 from loguru import logger
+from PIL import Image
 
-from pytti import (
-    parametric_eval,
-    set_t,
-    vram_usage_mode,
-    print_vram_usage,
-    freeze_vram_usage,
-)
-
+from pytti import (freeze_vram_usage, parametric_eval, print_vram_usage, set_t,
+                   vram_usage_mode)
 from pytti.image_models.pixel import PixelImage
-
-from pytti.Transforms import (
-    animate_2d,
-    zoom_2d,
-    zoom_3d,
-    animate_video_source,
-)
-
-from pytti.rotoscoper import (
-    # clear_rotoscopers,
-    update_rotoscopers,
-)
-
 from pytti.Notebook import make_hbox
+from pytti.rotoscoper import update_rotoscopers  # clear_rotoscopers,
+from pytti.Transforms import animate_video_source, zoom_2d, zoom_3d
 
 # OUTPATH = f"{os.getcwd()}/images_out/"
 OUTPATH = f"{os.getcwd()}/images_out"
