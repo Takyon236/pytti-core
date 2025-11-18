@@ -66,9 +66,18 @@ def _download(url, dest):
 
     os.makedirs(os.path.dirname(dest), exist_ok=True)
 
+    # Security: Maximum download size (5GB for large models)
+    MAX_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024  # 5GB
+
     try:
         with urllib.request.urlopen(url, timeout=30) as source:
             file_size = int(source.info().get("Content-Length"))
+
+            # Security: Validate file size before downloading
+            if file_size > MAX_DOWNLOAD_SIZE:
+                raise ValueError(
+                    f"File too large: {file_size / (1024**3):.2f}GB exceeds maximum of {MAX_DOWNLOAD_SIZE / (1024**3):.0f}GB"
+                )
 
             # Check if file already downloaded
             if os.path.isfile(dest):

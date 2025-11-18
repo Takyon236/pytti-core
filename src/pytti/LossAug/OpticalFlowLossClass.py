@@ -102,7 +102,8 @@ def init_GMA(checkpoint_path=None, device=None):
             args = parser.parse_args([])
             GMA = torch.nn.DataParallel(RAFTGMA(args), device_ids=[device])
             # GMA = RAFTGMA(args)
-            GMA.load_state_dict(torch.load(checkpoint_path))
+            # Security: Use weights_only=True to prevent arbitrary code execution
+            GMA.load_state_dict(torch.load(checkpoint_path, weights_only=True))
             GMA.to(device)
             GMA.eval()
 
@@ -252,7 +253,8 @@ class OpticalFlowLoss(MSELoss):
         motionedge = torch.cat([f_x, f_y]).square().sum(dim=(0, 1))
 
         height, width = flow_forward.shape[-2:]
-        y, x = torch.meshgrid([torch.arange(0, height), torch.arange(0, width)])
+        # Fix: Explicit indexing parameter required for PyTorch 2.0+ compatibility
+        y, x = torch.meshgrid([torch.arange(0, height), torch.arange(0, width)], indexing='ij')
         x = x.to(device)
         y = y.to(device)
 
@@ -367,7 +369,8 @@ class OpticalFlowLoss(MSELoss):
             if not isinstance(device, torch.device):
                 device = torch.device(device)
             # logger.debug(device)
-            state_dict = torch.load(path, map_location=device)
+            # Security: Use weights_only=True to prevent arbitrary code execution
+            state_dict = torch.load(path, map_location=device, weights_only=True)
             img.load_state_dict(state_dict)
 
         gc.collect()

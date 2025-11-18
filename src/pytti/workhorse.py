@@ -506,8 +506,9 @@ def _main(cfg: DictConfig):
                 else:
                     filename = f"{base_name}_{restore_frame}.bak"
                 logger.info("restoring from", filename)
+                # Security: Use weights_only=True to prevent arbitrary code execution
                 img.load_state_dict(
-                    torch.load(f"backup/{params.file_namespace}/{filename}")
+                    torch.load(f"backup/{params.file_namespace}/{filename}", weights_only=True)
                 )
             else:  # reencode
                 if restore_frame == latest:

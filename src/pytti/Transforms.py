@@ -172,7 +172,8 @@ def render_image_3d(
     if device is None:
         device = image.device
     logger.debug(device)
-    y, x = torch.meshgrid(torch.linspace(-1, 1, h), torch.linspace(-f, f, w))
+    # Fix: Explicit indexing parameter required for PyTorch 2.0+ compatibility
+    y, x = torch.meshgrid(torch.linspace(-1, 1, h), torch.linspace(-f, f, w), indexing='ij')
     x = x.unsqueeze(0).unsqueeze(0)
     y = y.unsqueeze(0).unsqueeze(0)
     xy = torch.cat([x, y], dim=1).to(device)

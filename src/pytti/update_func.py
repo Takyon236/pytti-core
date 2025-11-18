@@ -76,7 +76,8 @@ def update(
             rec = model.dataframe[0].iloc[-1]
             logger.debug(rec)
             if writer is not None:
-                for k, v in rec.iteritems():
+                # Fix: Use .items() instead of deprecated .iteritems() for pandas 2.0+ compatibility
+                for k, v in rec.items():
                     writer.add_scalar(tag=f"losses/{k}", scalar_value=v, global_step=i)
 
         # does this VRAM stuff even do anything?
