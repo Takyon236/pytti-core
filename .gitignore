@@ -6,6 +6,7 @@ vendor/
 runs/
 logs/
 backup/
+config/
 .vscode/
 
 **/runs/
